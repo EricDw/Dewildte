@@ -54,6 +54,7 @@ kotlin {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
         }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -62,7 +63,10 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
+//            implementation(libs.ktor.client.core)
+//            implementation(libs.kotlinx.coroutines.core)
         }
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
