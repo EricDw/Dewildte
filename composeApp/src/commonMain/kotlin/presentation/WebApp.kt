@@ -91,7 +91,7 @@ fun WebApp() {
 					modifier = contentModifier,
 					contentAlignment = Alignment.Center,
 				) {
-					Text(text = "Website")
+					Text(text = "Hello, World")
 				}
 
 			}
