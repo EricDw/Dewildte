@@ -5,7 +5,9 @@ import presentation.WebApp
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-	CanvasBasedWindow(canvasElementId = "ComposeTarget") {
+	CanvasBasedWindow(
+		canvasElementId = "ComposeTarget",
+	) {
 		DewildteTheme {
 			WebApp()
 		}
