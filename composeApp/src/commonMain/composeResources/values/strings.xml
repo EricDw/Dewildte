@@ -1,5 +1,6 @@
 <resources>
     <string name="label_my_name">Eric De Wildt</string>
+    <string name="label_home">Home</string>
     <string name="label_profile">Profile</string>
     <string name="label_blog">Blog</string>
 </resources>

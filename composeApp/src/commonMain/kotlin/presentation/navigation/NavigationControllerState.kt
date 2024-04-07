@@ -1,37 +1,26 @@
 package presentation.navigation
 
 import androidx.compose.runtime.*
-import presentation.blog.BASE_BLOG_ROUTE
-import presentation.profile.BASE_PROFILE_ROUTE
+import presentation.home.HomeRoute
 
 @Stable
 class NavigationControllerState(
-	initialRoute: String? = BASE_PROFILE_ROUTE,
+	initialRoute: Route? = null,
 ) {
 
-	private var _selectedRoute: String? by mutableStateOf(initialRoute)
-	
-	val selectedRoute: String?
+	private var _selectedRoute: Route? by mutableStateOf(initialRoute)
+	val selectedRoute: Route?
 		get() = _selectedRoute
 	
-	val isProfileSelected: Boolean
-		get() = _selectedRoute?.contains(BASE_PROFILE_ROUTE) ?: false
-	
-	val isBlogSelected: Boolean
-		get() = _selectedRoute?.contains(BASE_BLOG_ROUTE) ?: false
-	
-	fun navigateToProfile() {
-		_selectedRoute = BASE_PROFILE_ROUTE
+	fun navigateToRoute(route: Route) {
+		_selectedRoute = route
 	}
-	
-	fun navigateToBlog() {
-		_selectedRoute = BASE_BLOG_ROUTE
-	}
+
 }
 
 @Composable
 fun rememberNavigationControllerState(
-	initialRoute: String? = BASE_PROFILE_ROUTE,
+	initialRoute: Route? = null,
 ): NavigationControllerState {
 	return remember(
 		initialRoute,
