@@ -37,59 +37,68 @@ fun WebApp() {
 		initialRoute = HomeRoute,
 	)
 
+	val rootRoutes = listOf(
+		HomeRoute,
+		ProfileRoute,
+		BlogRoute
+	)
+
 	ModalNavigationDrawer(
 		drawerState = drawerState,
 		drawerContent = {
 			ModalDrawerSheet {
 
-				NavigationDrawerItem(
-					selected = navigationControllerState.selectedRoute is HomeRoute,
-					onClick = {
-						scope.launch {
-							drawerState.close()
-							navigationControllerState.navigateToRoute(HomeRoute)
-						}
-					},
-					icon = {
-						ProfileIcon()
-					},
-					label = {
-						Text(text = stringResource(Res.string.label_home))
-					}
-				)
+				rootRoutes.forEach { route ->
 
-				NavigationDrawerItem(
-					selected = navigationControllerState.selectedRoute is ProfileRoute,
-					onClick = {
-						scope.launch {
-							drawerState.close()
-							navigationControllerState.navigateToRoute(ProfileRoute)
-						}
-					},
-					icon = {
-						ProfileIcon()
-					},
-					label = {
-						Text(text = stringResource(Res.string.label_profile))
-					}
-				)
+					NavigationDrawerItem(
+						selected = navigationControllerState.selectedRoute == route,
+						onClick = {
+							scope.launch {
+								drawerState.close()
+								navigationControllerState.navigateToRoute(route)
+							}
+						},
+						icon = {
+							when (route) {
+								is HomeRoute -> {
+									HomeIcon()
+								}
 
-				NavigationDrawerItem(
-					selected = navigationControllerState.selectedRoute is BlogRoute,
-					onClick = {
-						scope.launch {
-							drawerState.close()
-							navigationControllerState.navigateToRoute(BlogRoute)
-						}
-					},
-					icon = {
-						BlogIcon()
-					},
-					label = {
-						Text(text = stringResource(Res.string.label_blog))
-					}
-				)
+								is ProfileRoute -> {
+									ProfileIcon()
+								}
 
+								is BlogRoute -> {
+									BlogIcon()
+								}
+							}
+						},
+						label = {
+							val resource = when (route) {
+								is HomeRoute -> {
+									Res.string.label_home
+								}
+
+								is ProfileRoute -> {
+									Res.string.label_profile
+								}
+
+								is BlogRoute -> {
+									Res.string.label_blog
+								}
+
+								else -> {
+									null
+								}
+							}
+
+							resource?.let {
+								Text(text = stringResource(it))
+							}
+
+						}
+					)
+				}
 			}
 		},
 	) {
@@ -111,44 +120,57 @@ fun WebApp() {
 				},
 			) {
 
-				NavigationRailItem(
-					selected = navigationControllerState.selectedRoute is HomeRoute,
-					onClick = {
-						navigationControllerState.navigateToRoute(HomeRoute)
-					},
-					icon = {
-						HomeIcon()
-					},
-					label = {
-						Text(text = stringResource(Res.string.label_home))
-					}
-				)
+				rootRoutes.forEach { route ->
 
-				NavigationRailItem(
-					selected = navigationControllerState.selectedRoute is ProfileRoute,
-					onClick = {
-						navigationControllerState.navigateToRoute(ProfileRoute)
-					},
-					icon = {
-						ProfileIcon()
-					},
-					label = {
-						Text(text = stringResource(Res.string.label_profile))
-					}
-				)
+					NavigationRailItem(
+						selected = navigationControllerState.selectedRoute == route,
+						onClick = {
+							scope.launch {
+								drawerState.close()
+								navigationControllerState.navigateToRoute(route)
+							}
+						},
+						icon = {
+							when (route) {
+								is HomeRoute -> {
+									HomeIcon()
+								}
 
-				NavigationRailItem(
-					selected = navigationControllerState.selectedRoute is BlogRoute,
-					onClick = {
-						navigationControllerState.navigateToRoute(BlogRoute)
-					},
-					icon = {
-						BlogIcon()
-					},
-					label = {
-						Text(text = stringResource(Res.string.label_blog))
-					}
-				)
+								is ProfileRoute -> {
+									ProfileIcon()
+								}
+
+								is BlogRoute -> {
+									BlogIcon()
+								}
+							}
+						},
+						label = {
+							val resource = when (route) {
+								is HomeRoute -> {
+									Res.string.label_home
+								}
+
+								is ProfileRoute -> {
+									Res.string.label_profile
+								}
+
+								is BlogRoute -> {
+									Res.string.label_blog
+								}
+
+								else -> {
+									null
+								}
+							}
+
+							resource?.let {
+								Text(text = stringResource(it))
+							}
+
+						}
+					)
+				}
 			}
 
 			Scaffold(
