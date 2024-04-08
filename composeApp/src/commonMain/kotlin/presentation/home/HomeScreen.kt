@@ -20,7 +20,7 @@ fun HomeScreen() {
 		}
 
 		paragraph {
-			"Welcome To my website!"
+			"Welcome to my website!"
 		}
 
 		paragraph {
