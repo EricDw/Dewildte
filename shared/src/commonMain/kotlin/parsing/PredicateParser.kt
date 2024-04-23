@@ -2,8 +2,8 @@ package parsing
 
 class PredicateParser<USER_STATE, INPUT : Any>(
 	private val predicate: (obj: INPUT) -> Boolean,
-) : Parser<USER_STATE, INPUT, INPUT> {
-	override fun invoke(
+) : AbstractParser<USER_STATE, INPUT, INPUT>() {
+	override fun parse(
 		input: Parser.Input<USER_STATE, INPUT>
 	): Parser.Result<USER_STATE, INPUT, INPUT> {
 		val item: INPUT = input.items.elementAt(input.position)
@@ -11,17 +11,14 @@ class PredicateParser<USER_STATE, INPUT : Any>(
 		return when (predicate(item)) {
 
 			true -> {
-				val output = input.copy(
-					position = input.position.inc()
-				)
-				Parser.Result.Match(
-					nextInput = output,
-					matchedItem = item,
+				match(
+					originalInput = input,
+					output = item,
 				)
 			}
 
 			false -> {
-				Parser.Result.Failure(
+				fail(
 					originalInput = input,
 					error = IllegalArgumentException("Item: $item, Failed to match the given predicate"),
 				)

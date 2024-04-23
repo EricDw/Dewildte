@@ -1,6 +1,12 @@
 package parsing
 
-fun interface Parser<USER_STATE, INPUT : Any, OUTPUT: Any> {
+/**
+ * Defines the basic contract for parsers.
+ *
+ * A parser determines how to extract, or parse,
+ * an object of type [OUTPUT] out of an object of type [INPUT].
+ */
+fun interface Parser<USER_STATE, INPUT : Any, OUTPUT : Any> {
 
 	data class Input<USER_STATE, INPUT : Any>(
 		val items: Iterable<INPUT>,
@@ -20,5 +26,7 @@ fun interface Parser<USER_STATE, INPUT : Any, OUTPUT: Any> {
 		) : Result<USER_STATE, INPUT, OUTPUT>()
 	}
 
-	operator fun invoke(input: Input<USER_STATE, INPUT>): Result<USER_STATE, INPUT, OUTPUT>
+	operator fun invoke(
+		input: Input<USER_STATE, INPUT>
+	): Result<USER_STATE, INPUT, OUTPUT>
 }
