@@ -5,12 +5,18 @@ import androidx.compose.runtime.Composable
 sealed interface PostItem
 
 data class TitleItem(
-	val text: String,
-) : PostItem
+	val rawText: String,
+) : PostItem {
+	val text: String
+		get() = rawText.trimMargin()
+}
 
 data class ParagraphItem(
-	val text: String,
-) : PostItem
+	val rawText: String,
+) : PostItem {
+	val text: String
+		get() = rawText.trimMargin()
+}
 
 data class ComposableItem(
 	val code: @Composable () -> Unit,

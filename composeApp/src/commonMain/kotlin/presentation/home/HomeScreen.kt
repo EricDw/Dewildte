@@ -20,12 +20,12 @@ fun HomeScreen() {
 		}
 
 		paragraph {
-			"Welcome to my website!"
+			"""Welcome to my website!"""
 		}
 
 		paragraph {
 			"""I am proud to say that I built this website using Kotlin Multilplatform 😎
-				|The purpose of this website is to showcase my software development skills and host my personal blog.""".trimMargin()
+				|The purpose of this website is to showcase my software development skills and host my personal blog."""
 		}
 
 		paragraph {
@@ -35,7 +35,7 @@ fun HomeScreen() {
 		paragraph {
 			"""WARNING:
 				|This place is a bit of a proving grounds for me and as such it is often using experiemental technology.
-				|I apologise in advance for any bugs or glitches caused by any instability you find here.""".trimMargin()
+				|I apologise in advance for any bugs or glitches caused by any instability you find here."""
 		}
 	}
 

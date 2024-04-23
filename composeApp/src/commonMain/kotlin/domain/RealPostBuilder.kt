@@ -10,13 +10,13 @@ class RealPostBuilder : Post.Builder {
 	override fun title(
 		block: () -> String
 	) {
-		items += TitleItem(text = block())
+		items += TitleItem(rawText = block())
 	}
 
 	override fun paragraph(
 		block: () -> String
 	) {
-		items += ParagraphItem(text = block())
+		items += ParagraphItem(rawText = block())
 	}
 
 	override fun composable(

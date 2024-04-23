@@ -56,13 +56,13 @@ fun Post(
 @Preview
 private fun PostPreview() {
 	val post = post {
-		title { "Title" }
+		title { """Title""" }
 
-		paragraph { "Paragraph" }
+		paragraph { """Paragraph""" }
 
 		composable {
 			Button(onClick = {}) {
-				Text("Composable Button")
+				Text("""Composable Button""")
 			}
 		}
 	}
