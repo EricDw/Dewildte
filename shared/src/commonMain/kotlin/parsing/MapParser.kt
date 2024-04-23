@@ -54,7 +54,7 @@ private fun main() {
 		matchedItem = "1",
 	)
 
-	val parserToMap = Parser { input: Parser.Input<Unit, Int> ->
+	val parserToMap: Parser<Unit, Int, Int> = Parser { input ->
 		val item = input.items.elementAt(input.position)
 
 		if (item == 1) {
