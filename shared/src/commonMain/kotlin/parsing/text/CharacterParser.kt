@@ -2,14 +2,17 @@ package parsing.text
 
 import parsing.Parser
 
-class CharParser(
+class CharacterParser(
 	private val charToMatch: Char,
 	private val ignoreCase: Boolean = false,
-) : Parser<String, Char, Throwable> {
+) : TextParser<Char, Throwable> {
 	override fun invoke(
-		input: String
-	): Parser.Result<String, Char, Throwable> {
-		val character: Char = input.first()
+		input: TextParserState
+	): TextParserResult<Char, Throwable> {
+		
+		val (characters, position) = input
+		
+		val character: Char = characters.elementAt(position)
 
 		val isMatch: Boolean = charToMatch.equals(
 			other = character,
@@ -19,7 +22,7 @@ class CharParser(
 		return when (isMatch) {
 			true -> {
 				Parser.Result.Match(
-					nextInput = input.drop(1),
+					nextInput = input.copy(position = position.inc()),
 					matchedItem = character,
 				)
 			}
@@ -37,19 +40,19 @@ class CharParser(
 }
 
 /**
- * Ensures the [CharParser] functions correctly.
+ * Ensures the [CharacterParser] functions correctly.
  */
 private fun main() {
 
-	val expected: Parser.Result.Match<String, Char, Throwable> = Parser.Result.Match(
-		nextInput = "",
+	val expected = Parser.Result.Match<TextParserState, Char, Throwable>(
+		nextInput = TextParserState(characters = listOf('A'), position = 1),
 		matchedItem = 'A',
 	)
 
-	val parser = CharParser(charToMatch = 'A')
+	val parser = CharacterParser(charToMatch = 'A')
 
-	val actual: Parser.Result<String, Char, Throwable> = parser(
-		input = "A",
+	val actual = parser(
+		input = TextParserState(listOf('A')),
 	)
 
 	check(

@@ -1,19 +1,19 @@
 package parsing
 
-class AndLeftParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any>(
-	private val firstParser: Parser<INPUT, OUTPUT_A>,
-	private val secondParser: Parser<INPUT, OUTPUT_B>,
-) : AbstractParser<INPUT, OUTPUT_A>() {
+class AndLeftParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable>(
+	private val firstParser: Parser<INPUT, OUTPUT_A, ERROR>,
+	private val secondParser: Parser<INPUT, OUTPUT_B, ERROR>,
+) : Parser<INPUT, OUTPUT_A, ERROR> {
 
-	override fun parse(
+	override fun invoke(
 		input: INPUT
-	): Parser.Result<INPUT, OUTPUT_A> {
-
+	): Parser.Result<INPUT, OUTPUT_A, ERROR> {
+		
 		return when (
 			val firstResult = firstParser(input)
 		) {
 			is Parser.Result.Failure -> {
-				fail(
+				Parser.Result.Failure(
 					originalInput = input,
 					error = firstResult.error,
 				)
@@ -24,7 +24,7 @@ class AndLeftParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any>(
 					val secondResult = secondParser(firstResult.nextInput)
 				) {
 					is Parser.Result.Failure -> {
-						fail(
+						Parser.Result.Failure(
 							originalInput = secondResult.originalInput,
 							error = secondResult.error,
 						)
@@ -44,9 +44,9 @@ class AndLeftParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any>(
 }
 
 @Suppress("FunctionName")
-infix fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any> Parser<INPUT, OUTPUT_A>._and(
-	other: Parser<INPUT, OUTPUT_B>,
-): Parser<INPUT, OUTPUT_A> {
+infix fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable> Parser<INPUT, OUTPUT_A, ERROR>._and(
+	other: Parser<INPUT, OUTPUT_B, ERROR>,
+): Parser<INPUT, OUTPUT_A, ERROR> {
 	return AndLeftParser(
 		firstParser = this,
 		secondParser = other
@@ -63,7 +63,7 @@ private fun main() {
 		val position: Int = 0,
 	)
 
-	val expected: Parser.Result.Match<AnyStream, Int> = Parser.Result.Match(
+	val expected: Parser.Result.Match<AnyStream, Int, Throwable> = Parser.Result.Match(
 		nextInput = AnyStream(
 			data = listOf(1, "Two"),
 			position = 2,
@@ -105,7 +105,7 @@ private fun main() {
 
 	val parser = firstParser _and secondParser
 
-	val actual: Parser.Result<AnyStream, Int> = parser(
+	val actual: Parser.Result<AnyStream, Int, Throwable> = parser(
 		input = AnyStream(
 			data = listOf(1, "Two"),
 		),

@@ -1,35 +1,51 @@
-package parsing
+package parsing.text
+
+import parsing.Parser
+import parsing.join
 
 class StringParser(
 	private val stringToMatch: String,
 	private val ignoreCase: Boolean = false,
-) : Parser<String, String> {
+) : TextParser<String, Throwable> {
 	override fun invoke(
-		input: String
-	): Parser.Result<String, String> {
+		input: TextParserState
+	): Parser.Result<TextParserState, String, Throwable> {
 
-//		var result: Parser.Result<String>? = null
-//
-//		return when (predicate(item)) {
-//			true -> {
-//				val output = input.copy(
-//					position = input.position.inc()
-//				)
-//				Parser.Result.Match(
-//					nextInput = output,
-//					matchedItem = item,
-//				)
-//			}
-//
-//			false -> {
-//				Parser.Result.Failure(
-//					originalInput = input,
-//					error = "Item: $item, Failed to match the predicate: $predicate",
-//				)
-//			}
-//		}
+		fun Char.toParser(): CharacterParser {
+			return CharacterParser(charToMatch = this, ignoreCase = ignoreCase)
+		}
 
-		TODO()
+		return stringToMatch
+			.map(Char::toParser)
+			.join { chars ->
+				chars.joinToString("")
+			}
+			.invoke(input)
 	}
 
+}
+
+/**
+* Ensures the [StringParser] functions correctly.
+*/
+private fun main() {
+
+	val expected = Parser.Result.Match<TextParserState, String, Throwable>(
+		nextInput = TextParserState("Hello, World".toList(), position = 5),
+		matchedItem = "Hello",
+	)
+
+	val parser = StringParser(stringToMatch = "Hello")
+
+	val actual = parser(
+		input = TextParserState("Hello, World".toList()),
+	)
+
+	check(
+		value = actual == expected
+	) {
+		"\n\tExpected: $expected\n\tActual: $actual"
+	}
+
+	println("Success")
 }

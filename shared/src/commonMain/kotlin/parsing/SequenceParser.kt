@@ -1,12 +1,12 @@
 package parsing
 
-class SequenceParser<INPUT : Any, OUTPUT : Any>(
-	private val parsers: Iterable<Parser<INPUT, OUTPUT>>,
-) : Parser<INPUT, Iterable<OUTPUT>> {
+class SequenceParser<INPUT : Any, OUTPUT : Any, ERROR: Throwable>(
+	private val parsers: Iterable<Parser<INPUT, OUTPUT, ERROR>>,
+) : Parser<INPUT, Iterable<OUTPUT>, ERROR> {
 
 	override fun invoke(
 		input: INPUT
-	): Parser.Result<INPUT, Iterable<OUTPUT>> {
+	): Parser.Result<INPUT, Iterable<OUTPUT>, ERROR> {
 
 		var nextInput = input
 
@@ -35,8 +35,8 @@ class SequenceParser<INPUT : Any, OUTPUT : Any>(
 	}
 }
 
-fun <INPUT : Any, OUTPUT : Any> Iterable<Parser<INPUT, OUTPUT>>.join(
-): Parser<INPUT, Iterable<OUTPUT>> {
+fun <INPUT : Any, OUTPUT : Any, ERROR: Throwable> Iterable<Parser<INPUT, OUTPUT, ERROR>>.join(
+): Parser<INPUT, Iterable<OUTPUT>, ERROR> {
 	return SequenceParser(parsers = this)
 }
 
@@ -50,7 +50,7 @@ private fun main() {
 		val position: Int = 0,
 	)
 
-	val expected: Parser.Result.Match<CharStream, Iterable<Char>> = Parser.Result.Match(
+	val expected: Parser.Result.Match<CharStream, Iterable<Char>, Throwable> = Parser.Result.Match(
 		nextInput = CharStream(
 			data = listOf('A', 'B', 'C'),
 			position = 3,
@@ -106,7 +106,7 @@ private fun main() {
 		}
 	}
 
-	val parser: Parser<CharStream, Iterable<Char>> = listOf(aParser, bParser, cParser).join()
+	val parser: Parser<CharStream, Iterable<Char>, Throwable> = listOf(aParser, bParser, cParser).join()
 
 	val actual = parser(
 		input = CharStream(

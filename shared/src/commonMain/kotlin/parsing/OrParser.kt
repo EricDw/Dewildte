@@ -1,13 +1,13 @@
 package parsing
 
-class OrParser<INPUT : Any, OUTPUT : Any>(
-	private val firstParser: Parser<INPUT, OUTPUT>,
-	private val secondParser: Parser<INPUT, OUTPUT>,
-) : Parser<INPUT, OUTPUT> {
+class OrParser<INPUT : Any, OUTPUT : Any, ERROR: Throwable>(
+	private val firstParser: Parser<INPUT, OUTPUT, ERROR>,
+	private val secondParser: Parser<INPUT, OUTPUT, ERROR>,
+) : Parser<INPUT, OUTPUT, ERROR> {
 
 	override fun invoke(
 		input: INPUT
-	): Parser.Result<INPUT, OUTPUT> {
+	): Parser.Result<INPUT, OUTPUT, ERROR> {
 		return when (
 			val firstResult = firstParser(input)
 		) {
@@ -23,9 +23,9 @@ class OrParser<INPUT : Any, OUTPUT : Any>(
 
 }
 
-infix fun <INPUT : Any, OUTPUT : Any> Parser<INPUT, OUTPUT>.or(
-	other: Parser<INPUT, OUTPUT>,
-): Parser<INPUT, OUTPUT> {
+infix fun <INPUT : Any, OUTPUT : Any, ERROR: Throwable> Parser<INPUT, OUTPUT, ERROR>.or(
+	other: Parser<INPUT, OUTPUT, ERROR>,
+): Parser<INPUT, OUTPUT, ERROR> {
 	return OrParser(
 		firstParser = this,
 		secondParser = other
@@ -42,7 +42,7 @@ private fun main() {
 		val position: Int = 0,
 	)
 
-	val expectedA: Parser.Result.Match<AnyStream, String> = Parser.Result.Match(
+	val expectedA: Parser.Result.Match<AnyStream, String, Throwable> = Parser.Result.Match(
 		nextInput = AnyStream(
 			data = listOf("One", "Two"),
 			position = 1,
@@ -50,7 +50,7 @@ private fun main() {
 		matchedItem = "One",
 	)
 
-	val expectedB: Parser.Result.Match<AnyStream, String> = Parser.Result.Match(
+	val expectedB: Parser.Result.Match<AnyStream, String, Throwable> = Parser.Result.Match(
 		nextInput = AnyStream(
 			data = listOf("Two", "One"),
 			position = 1,
@@ -92,11 +92,11 @@ private fun main() {
 
 	val parser = firstParser or secondParser
 
-	val actualA: Parser.Result<AnyStream, Any> = parser(
+	val actualA: Parser.Result<AnyStream, Any, Throwable> = parser(
 		input = AnyStream(listOf("One", "Two"))
 	)
 
-	val actualB: Parser.Result<AnyStream, Any> = parser(
+	val actualB: Parser.Result<AnyStream, Any, Throwable> = parser(
 		input = AnyStream(listOf("Two", "One"))
 	)
 

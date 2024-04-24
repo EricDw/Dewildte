@@ -1,14 +1,14 @@
 package parsing
 
-class BetweenParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, OUTPUT_C : Any>(
-	private val leftParser: Parser<INPUT, OUTPUT_A>,
-	private val middleParser: Parser<INPUT, OUTPUT_B>,
-	private val rightParser: Parser<INPUT, OUTPUT_C>,
-) : AbstractParser<INPUT, OUTPUT_B>() {
+class BetweenParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, OUTPUT_C : Any, ERROR: Throwable>(
+	private val leftParser: Parser<INPUT, OUTPUT_A, ERROR>,
+	private val middleParser: Parser<INPUT, OUTPUT_B, ERROR>,
+	private val rightParser: Parser<INPUT, OUTPUT_C, ERROR>,
+) : Parser<INPUT, OUTPUT_B, ERROR> {
 
-	override fun parse(
+	override fun invoke(
 		input: INPUT
-	): Parser.Result<INPUT, OUTPUT_B> {
+	): Parser.Result<INPUT, OUTPUT_B, ERROR> {
 
 		return (leftParser and_ middleParser _and rightParser).invoke(input)
 
@@ -16,11 +16,11 @@ class BetweenParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, OUTPUT_C : Any>
 
 }
 
-fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, OUTPUT_C : Any> between(
-	leftParser: Parser<INPUT, OUTPUT_A>,
-	middleParser: Parser<INPUT, OUTPUT_B>,
-	rightParser: Parser<INPUT, OUTPUT_C>,
-): Parser<INPUT, OUTPUT_B> {
+fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, OUTPUT_C : Any, ERROR: Throwable> between(
+	leftParser: Parser<INPUT, OUTPUT_A, ERROR>,
+	middleParser: Parser<INPUT, OUTPUT_B, ERROR>,
+	rightParser: Parser<INPUT, OUTPUT_C, ERROR>,
+): Parser<INPUT, OUTPUT_B, ERROR> {
 	return BetweenParser(
 		leftParser = leftParser,
 		middleParser = middleParser,
@@ -38,7 +38,7 @@ private fun main() {
 		val position: Int = 0,
 	)
 
-	val expected: Parser.Result.Match<AnyStream, String> = Parser.Result.Match(
+	val expected: Parser.Result.Match<AnyStream, String, Throwable> = Parser.Result.Match(
 		nextInput = AnyStream(
 			data = listOf(1, "Two", 1),
 			position = 3,
@@ -62,7 +62,7 @@ private fun main() {
 		}
 	}
 
-	val twoParser: Parser<AnyStream, String> = Parser { input: AnyStream ->
+	val twoParser: Parser<AnyStream, String, Throwable> = Parser { input: AnyStream ->
 		val item = input.data.elementAt(input.position)
 
 		if (item is String && item == "Two") {
@@ -84,7 +84,7 @@ private fun main() {
 		rightParser = oneParser
 	)
 
-	val actual: Parser.Result<AnyStream, String> = parser(
+	val actual: Parser.Result<AnyStream, String, Throwable> = parser(
 		input = AnyStream(
 			data = listOf(1, "Two", 1),
 		),

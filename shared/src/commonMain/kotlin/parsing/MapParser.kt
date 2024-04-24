@@ -1,13 +1,13 @@
 package parsing
 
-class MapParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any>(
-	private val parserToMap: Parser<INPUT, OUTPUT_A>,
+class MapParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable>(
+	private val parserToMap: Parser<INPUT, OUTPUT_A, ERROR>,
 	private val mapper: (mathedItem: OUTPUT_A) -> OUTPUT_B,
-) : Parser<INPUT, OUTPUT_B> {
+) : Parser<INPUT, OUTPUT_B, ERROR> {
 
 	override fun invoke(
 		input: INPUT
-	): Parser.Result<INPUT, OUTPUT_B> {
+	): Parser.Result<INPUT, OUTPUT_B, ERROR> {
 		return when (
 			val result = parserToMap(input)
 		) {
@@ -31,9 +31,9 @@ class MapParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any>(
 
 }
 
-infix fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any> Parser<INPUT, OUTPUT_A>.map(
+infix fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable> Parser<INPUT, OUTPUT_A, ERROR>.map(
 	mapper: (itemToMap: OUTPUT_A) -> OUTPUT_B,
-): Parser<INPUT, OUTPUT_B> {
+): Parser<INPUT, OUTPUT_B, ERROR> {
 	return MapParser(
 		parserToMap = this,
 		mapper = mapper,
@@ -50,7 +50,7 @@ private fun main() {
 		val position: Int = 0,
 	)
 
-	val expected: Parser.Result.Match<IntStream, String> = Parser.Result.Match(
+	val expected: Parser.Result.Match<IntStream, String, Throwable> = Parser.Result.Match(
 		nextInput = IntStream(
 			data = listOf(1),
 			position = 1,
@@ -58,7 +58,7 @@ private fun main() {
 		matchedItem = "1",
 	)
 
-	val parserToMap: Parser<IntStream, Int> = Parser { input: IntStream ->
+	val parserToMap: Parser<IntStream, Int, Throwable> = Parser { input: IntStream ->
 		val item = input.data.elementAt(input.position)
 
 		if (item == 1) {
@@ -76,7 +76,7 @@ private fun main() {
 
 	val parser = parserToMap map Any::toString
 
-	val actual: Parser.Result<IntStream, String> = parser(
+	val actual: Parser.Result<IntStream, String, Throwable> = parser(
 		input = IntStream(data = listOf(1)),
 	)
 

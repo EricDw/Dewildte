@@ -1,22 +1,22 @@
 package parsing
 
-class PredicateParser<INPUT : Any>(
+class PredicateParser<INPUT : Any, ERROR: Throwable>(
 	private val predicate: (obj: INPUT) -> Boolean,
-) : AbstractParser<INPUT, INPUT>() {
-	override fun parse(
+) : Parser<INPUT, INPUT, ERROR> {
+	override fun invoke(
 		input: INPUT
-	): Parser.Result<INPUT, INPUT> {
+	): Parser.Result<INPUT, INPUT, ERROR> {
 		return when (predicate(input)) {
 
 			true -> {
-				match(
-					originalInput = input,
-					output = input,
+				Parser.Result.Match(
+					nextInput = input,
+					matchedItem = input,
 				)
 			}
 
 			false -> {
-				fail(
+				Parser.Result.Failure(
 					originalInput = input,
 					error = IllegalArgumentException("Item: $input, Failed to match the given predicate"),
 				)
@@ -32,16 +32,16 @@ class PredicateParser<INPUT : Any>(
  */
 private fun main() {
 
-	val expected: Parser.Result.Match<Int, Int> = Parser.Result.Match(
+	val expected: Parser.Result.Match<Int, Int, Throwable> = Parser.Result.Match(
 		nextInput = 0,
 		matchedItem = 0,
 	)
 
-	val parser: PredicateParser<Int> = PredicateParser { item: Int ->
+	val parser: PredicateParser<Int, Throwable> = PredicateParser { item: Int ->
 		item == 0
 	}
 
-	val actual: Parser.Result<Int, Int> = parser(
+	val actual: Parser.Result<Int, Int, Throwable> = parser(
 		input = 0
 	)
 
