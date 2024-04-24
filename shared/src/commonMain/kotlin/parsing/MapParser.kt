@@ -1,13 +1,13 @@
 package parsing
 
-class MapParser<USER_STATE, INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any>(
-	private val parserToMap: Parser<USER_STATE, INPUT, OUTPUT_A>,
+class MapParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any>(
+	private val parserToMap: Parser<INPUT, OUTPUT_A>,
 	private val mapper: (mathedItem: OUTPUT_A) -> OUTPUT_B,
-) : Parser<USER_STATE, INPUT, OUTPUT_B> {
+) : Parser<INPUT, OUTPUT_B> {
 
 	override fun invoke(
-		input: Parser.Input<USER_STATE, INPUT>
-	): Parser.Result<USER_STATE, INPUT, OUTPUT_B> {
+		input: INPUT
+	): Parser.Result<INPUT, OUTPUT_B> {
 		return when (
 			val result = parserToMap(input)
 		) {
@@ -31,9 +31,9 @@ class MapParser<USER_STATE, INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any>(
 
 }
 
-infix fun <USER_STATE, INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any> Parser<USER_STATE, INPUT, OUTPUT_A>.map(
+infix fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any> Parser<INPUT, OUTPUT_A>.map(
 	mapper: (itemToMap: OUTPUT_A) -> OUTPUT_B,
-): Parser<USER_STATE, INPUT, OUTPUT_B> {
+): Parser<INPUT, OUTPUT_B> {
 	return MapParser(
 		parserToMap = this,
 		mapper = mapper,
@@ -45,17 +45,21 @@ infix fun <USER_STATE, INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any> Parser<USER_
  */
 private fun main() {
 
-	val expected: Parser.Result.Match<Unit, Int, String> = Parser.Result.Match(
-		nextInput = Parser.Input(
-			items = listOf(1),
-			userState = Unit,
+	data class IntStream(
+		val data: Iterable<Int>,
+		val position: Int = 0,
+	)
+
+	val expected: Parser.Result.Match<IntStream, String> = Parser.Result.Match(
+		nextInput = IntStream(
+			data = listOf(1),
 			position = 1,
 		),
 		matchedItem = "1",
 	)
 
-	val parserToMap: Parser<Unit, Int, Int> = Parser { input ->
-		val item = input.items.elementAt(input.position)
+	val parserToMap: Parser<IntStream, Int> = Parser { input: IntStream ->
+		val item = input.data.elementAt(input.position)
 
 		if (item == 1) {
 			Parser.Result.Match(
@@ -70,10 +74,10 @@ private fun main() {
 		}
 	}
 
-	val actual: Parser.Result<Unit, Int, String> = runParser(
-		userState = Unit,
-		itemsToParse = listOf(1),
-		parser = parserToMap map Any::toString,
+	val parser = parserToMap map Any::toString
+
+	val actual: Parser.Result<IntStream, String> = parser(
+		input = IntStream(data = listOf(1)),
 	)
 
 	check(

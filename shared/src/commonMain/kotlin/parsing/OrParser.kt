@@ -1,13 +1,13 @@
 package parsing
 
-class OrParser<USER_STATE, INPUT : Any, OUTPUT : Any>(
-	private val firstParser: Parser<USER_STATE, INPUT, OUTPUT>,
-	private val secondParser: Parser<USER_STATE, INPUT, OUTPUT>,
-) : Parser<USER_STATE, INPUT, OUTPUT> {
+class OrParser<INPUT : Any, OUTPUT : Any>(
+	private val firstParser: Parser<INPUT, OUTPUT>,
+	private val secondParser: Parser<INPUT, OUTPUT>,
+) : Parser<INPUT, OUTPUT> {
 
 	override fun invoke(
-		input: Parser.Input<USER_STATE, INPUT>
-	): Parser.Result<USER_STATE, INPUT, OUTPUT> {
+		input: INPUT
+	): Parser.Result<INPUT, OUTPUT> {
 		return when (
 			val firstResult = firstParser(input)
 		) {
@@ -23,9 +23,9 @@ class OrParser<USER_STATE, INPUT : Any, OUTPUT : Any>(
 
 }
 
-infix fun <USER_STATE, INPUT : Any, OUTPUT : Any> Parser<USER_STATE, INPUT, OUTPUT>.or(
-	other: Parser<USER_STATE, INPUT, OUTPUT>,
-): Parser<USER_STATE, INPUT, OUTPUT> {
+infix fun <INPUT : Any, OUTPUT : Any> Parser<INPUT, OUTPUT>.or(
+	other: Parser<INPUT, OUTPUT>,
+): Parser<INPUT, OUTPUT> {
 	return OrParser(
 		firstParser = this,
 		secondParser = other
@@ -37,26 +37,29 @@ infix fun <USER_STATE, INPUT : Any, OUTPUT : Any> Parser<USER_STATE, INPUT, OUTP
  */
 private fun main() {
 
-	val expectedA: Parser.Result.Match<Unit, Any, String> = Parser.Result.Match(
-		nextInput = Parser.Input(
-			items = listOf("One", "Two"),
-			userState = Unit,
+	data class AnyStream(
+		val data: Iterable<Any>,
+		val position: Int = 0,
+	)
+
+	val expectedA: Parser.Result.Match<AnyStream, String> = Parser.Result.Match(
+		nextInput = AnyStream(
+			data = listOf("One", "Two"),
 			position = 1,
 		),
 		matchedItem = "One",
 	)
-	
-	val expectedB: Parser.Result.Match<Unit, Any, String> = Parser.Result.Match(
-		nextInput = Parser.Input(
-			items = listOf("Two", "One"),
-			userState = Unit,
+
+	val expectedB: Parser.Result.Match<AnyStream, String> = Parser.Result.Match(
+		nextInput = AnyStream(
+			data = listOf("Two", "One"),
 			position = 1,
 		),
 		matchedItem = "Two",
 	)
-	
-	val firstParser = Parser { input: Parser.Input<Unit, String> ->
-		val item = input.items.elementAt(input.position)
+
+	val firstParser = Parser { input: AnyStream ->
+		val item = input.data.elementAt(input.position)
 
 		if (item == "One") {
 			Parser.Result.Match(
@@ -71,8 +74,8 @@ private fun main() {
 		}
 	}
 
-	val secondParser = Parser { input: Parser.Input<Unit, String> ->
-		val item = input.items.elementAt(input.position)
+	val secondParser = Parser { input: AnyStream ->
+		val item = input.data.elementAt(input.position)
 
 		if (item == "Two") {
 			Parser.Result.Match(
@@ -87,16 +90,14 @@ private fun main() {
 		}
 	}
 
-	val actualA: Parser.Result<Unit, String, String> = runParser(
-		userState = Unit,
-		itemsToParse = listOf("One", "Two"),
-		firstParser or secondParser,
+	val parser = firstParser or secondParser
+
+	val actualA: Parser.Result<AnyStream, Any> = parser(
+		input = AnyStream(listOf("One", "Two"))
 	)
-	
-	val actualB: Parser.Result<Unit, String, String> = runParser(
-		userState = Unit,
-		itemsToParse = listOf("Two", "One"),
-		firstParser or secondParser,
+
+	val actualB: Parser.Result<AnyStream, Any> = parser(
+		input = AnyStream(listOf("Two", "One"))
 	)
 
 	check(

@@ -6,27 +6,21 @@ package parsing
  * A parser determines how to extract, or parse,
  * an object of type [OUTPUT] out of an object of type [INPUT].
  */
-fun interface Parser<USER_STATE, INPUT : Any, OUTPUT : Any> {
+fun interface Parser<INPUT : Any, OUTPUT : Any> {
 
-	data class Input<USER_STATE, INPUT : Any>(
-		val items: Iterable<INPUT>,
-		val userState: USER_STATE,
-		val position: Int = 0,
-	)
-
-	sealed class Result<USER_STATE, INPUT : Any, OUTPUT : Any> {
-		data class Match<USER_STATE, INPUT : Any, OUTPUT : Any>(
-			val nextInput: Input<USER_STATE, INPUT>,
+	sealed class Result<INPUT : Any, OUTPUT : Any> {
+		data class Match<INPUT : Any, OUTPUT : Any>(
+			val nextInput: INPUT,
 			val matchedItem: OUTPUT,
-		) : Result<USER_STATE, INPUT, OUTPUT>()
+		) : Result<INPUT, OUTPUT>()
 
-		data class Failure<USER_STATE, INPUT : Any, OUTPUT : Any>(
-			val originalInput: Input<USER_STATE, INPUT>,
+		data class Failure<INPUT : Any, OUTPUT : Any>(
+			val originalInput: INPUT,
 			val error: Throwable,
-		) : Result<USER_STATE, INPUT, OUTPUT>()
+		) : Result<INPUT, OUTPUT>()
 	}
 
 	operator fun invoke(
-		input: Input<USER_STATE, INPUT>
-	): Result<USER_STATE, INPUT, OUTPUT>
+		input: INPUT
+	): Result<INPUT, OUTPUT>
 }

@@ -1,26 +1,24 @@
 package parsing
 
-class PredicateParser<USER_STATE, INPUT : Any>(
+class PredicateParser<INPUT : Any>(
 	private val predicate: (obj: INPUT) -> Boolean,
-) : AbstractParser<USER_STATE, INPUT, INPUT>() {
+) : AbstractParser<INPUT, INPUT>() {
 	override fun parse(
-		input: Parser.Input<USER_STATE, INPUT>
-	): Parser.Result<USER_STATE, INPUT, INPUT> {
-		val item: INPUT = input.items.elementAt(input.position)
-
-		return when (predicate(item)) {
+		input: INPUT
+	): Parser.Result<INPUT, INPUT> {
+		return when (predicate(input)) {
 
 			true -> {
 				match(
 					originalInput = input,
-					output = item,
+					output = input,
 				)
 			}
 
 			false -> {
 				fail(
 					originalInput = input,
-					error = IllegalArgumentException("Item: $item, Failed to match the given predicate"),
+					error = IllegalArgumentException("Item: $input, Failed to match the given predicate"),
 				)
 			}
 		}
@@ -34,23 +32,17 @@ class PredicateParser<USER_STATE, INPUT : Any>(
  */
 private fun main() {
 
-	val expected: Parser.Result.Match<Unit, Int, Int> = Parser.Result.Match(
-		nextInput = Parser.Input(
-			items = listOf(0),
-			userState = Unit,
-			position = 1,
-		),
+	val expected: Parser.Result.Match<Int, Int> = Parser.Result.Match(
+		nextInput = 0,
 		matchedItem = 0,
 	)
 
-	val parser: PredicateParser<Unit, Int> = PredicateParser { item: Int ->
+	val parser: PredicateParser<Int> = PredicateParser { item: Int ->
 		item == 0
 	}
 
-	val actual: Parser.Result<Unit, Int, Int> = runParser(
-		userState = Unit,
-		itemsToParse = listOf(0),
-		parser
+	val actual: Parser.Result<Int, Int> = parser(
+		input = 0
 	)
 
 	check(

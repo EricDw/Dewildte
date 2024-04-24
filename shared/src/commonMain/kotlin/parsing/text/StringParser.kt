@@ -1,14 +1,14 @@
 package parsing
 
-class StringParser<USER_STATE>(
+class StringParser(
 	private val stringToMatch: String,
 	private val ignoreCase: Boolean = false,
-) : Parser<USER_STATE, String, String> {
+) : Parser<String, String> {
 	override fun invoke(
-		input: Parser.Input<USER_STATE, String>
-	): Parser.Result<USER_STATE, String, String> {
+		input: String
+	): Parser.Result<String, String> {
 
-//		var result: Parser.Result<USER_STATE, String>? = null
+//		var result: Parser.Result<String>? = null
 //
 //		return when (predicate(item)) {
 //			true -> {
@@ -28,7 +28,7 @@ class StringParser<USER_STATE>(
 //				)
 //			}
 //		}
-		
+
 		TODO()
 	}
 

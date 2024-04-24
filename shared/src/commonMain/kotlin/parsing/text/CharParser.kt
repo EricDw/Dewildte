@@ -1,13 +1,13 @@
 package parsing
 
-class CharParser<USER_STATE>(
+class CharParser(
 	private val charToMatch: Char,
 	private val ignoreCase: Boolean = false,
-) : Parser<USER_STATE, Char, Char> {
+) : Parser<String, Char> {
 	override fun invoke(
-		input: Parser.Input<USER_STATE, Char>
-	): Parser.Result<USER_STATE, Char, Char> {
-		val character: Char = input.items.elementAt(input.position)
+		input: String
+	): Parser.Result<String, Char> {
+		val character: Char = input.first()
 
 		val isMatch: Boolean = charToMatch.equals(
 			other = character,
@@ -16,12 +16,8 @@ class CharParser<USER_STATE>(
 
 		return when (isMatch) {
 			true -> {
-				val output: Parser.Input<USER_STATE, Char> = input.copy(
-					position = input.position.inc()
-				)
-
 				Parser.Result.Match(
-					nextInput = output,
+					nextInput = input,
 					matchedItem = character,
 				)
 			}
@@ -29,7 +25,7 @@ class CharParser<USER_STATE>(
 			false -> {
 				Parser.Result.Failure(
 					originalInput = input,
-					error = IllegalArgumentException("Expected: $character, at position: ${input.position}, Fo und: $charToMatch"),
+					error = IllegalArgumentException("Expected: $character, at position: ${input.first()}, Found: $charToMatch"),
 				)
 			}
 		}
@@ -40,24 +36,18 @@ class CharParser<USER_STATE>(
 
 /**
  * Ensures the [CharParser] functions correctly.
-*/
+ */
 private fun main() {
 
-	val expected: Parser.Result.Match<Unit, Char, Char> = Parser.Result.Match(
-		nextInput = Parser.Input(
-			items = listOf('A'),
-			userState = Unit,
-			position = 1,
-		),
+	val expected: Parser.Result.Match<String, Char> = Parser.Result.Match(
+		nextInput = "A",
 		matchedItem = 'A',
 	)
 
-	val parser: CharParser<Unit> = CharParser(charToMatch = 'A')
+	val parser: CharParser = CharParser(charToMatch = 'A')
 
-	val actual: Parser.Result<Unit, Char, Char> = runParser(
-		userState = Unit,
-		itemsToParse = listOf('A'),
-		parser,
+	val actual: Parser.Result<String, Char> = parser(
+		input = "A",
 	)
 
 	check(

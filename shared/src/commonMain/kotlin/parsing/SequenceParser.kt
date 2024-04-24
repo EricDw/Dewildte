@@ -1,15 +1,15 @@
 package parsing
 
-class SequenceParser<USER_STATE, INPUT : Any, OUTPUT : Any>(
-	private val parsers: Iterable<Parser<USER_STATE, INPUT, OUTPUT>>,
-) : Parser<USER_STATE, INPUT, Iterable<OUTPUT>> {
+class SequenceParser<INPUT : Any, OUTPUT : Any>(
+	private val parsers: Iterable<Parser<INPUT, OUTPUT>>,
+) : Parser<INPUT, Iterable<OUTPUT>> {
 
 	override fun invoke(
-		input: Parser.Input<USER_STATE, INPUT>
-	): Parser.Result<USER_STATE, INPUT, Iterable<OUTPUT>> {
+		input: INPUT
+	): Parser.Result<INPUT, Iterable<OUTPUT>> {
 
 		var nextInput = input
-		
+
 		val output: List<OUTPUT> = buildList {
 			parsers.forEach { parser ->
 				when (val result = parser(nextInput)) {
@@ -35,8 +35,8 @@ class SequenceParser<USER_STATE, INPUT : Any, OUTPUT : Any>(
 	}
 }
 
-fun <USER_STATE, INPUT : Any, OUTPUT : Any> Iterable<Parser<USER_STATE, INPUT, OUTPUT>>.join(
-): Parser<USER_STATE, INPUT, Iterable<OUTPUT>> {
+fun <INPUT : Any, OUTPUT : Any> Iterable<Parser<INPUT, OUTPUT>>.join(
+): Parser<INPUT, Iterable<OUTPUT>> {
 	return SequenceParser(parsers = this)
 }
 
@@ -45,17 +45,21 @@ fun <USER_STATE, INPUT : Any, OUTPUT : Any> Iterable<Parser<USER_STATE, INPUT, O
  */
 private fun main() {
 
-	val expected: Parser.Result.Match<Unit, Char, List<Char>> = Parser.Result.Match(
-		nextInput = Parser.Input(
-			items = listOf('A', 'B', 'C'),
-			userState = Unit,
+	data class CharStream(
+		val data: Iterable<Char>,
+		val position: Int = 0,
+	)
+
+	val expected: Parser.Result.Match<CharStream, Iterable<Char>> = Parser.Result.Match(
+		nextInput = CharStream(
+			data = listOf('A', 'B', 'C'),
 			position = 3,
 		),
 		matchedItem = listOf('A', 'B', 'C'),
 	)
 
-	val aParser = Parser { input: Parser.Input<Unit, Char> ->
-		val item = input.items.elementAt(input.position)
+	val aParser = Parser { input: CharStream ->
+		val item = input.data.elementAt(input.position)
 
 		if (item == 'A') {
 			Parser.Result.Match(
@@ -70,8 +74,8 @@ private fun main() {
 		}
 	}
 
-	val bParser = Parser { input: Parser.Input<Unit, Char> ->
-		val item = input.items.elementAt(input.position)
+	val bParser = Parser { input: CharStream ->
+		val item = input.data.elementAt(input.position)
 
 		if (item == 'B') {
 			Parser.Result.Match(
@@ -86,8 +90,8 @@ private fun main() {
 		}
 	}
 
-	val cParser = Parser { input: Parser.Input<Unit, Char> ->
-		val item = input.items.elementAt(input.position)
+	val cParser = Parser { input: CharStream ->
+		val item = input.data.elementAt(input.position)
 
 		if (item == 'C') {
 			Parser.Result.Match(
@@ -101,13 +105,13 @@ private fun main() {
 			)
 		}
 	}
-	
-	val parser: Parser<Unit, Char, Iterable<Char>> = listOf(aParser, bParser, cParser).join()
-	
-	val actual: Parser.Result<Unit, Char, Iterable<Char>> = runParser(
-		userState = Unit,
-		itemsToParse = listOf('A', 'B', 'C'),
-		parser = parser,
+
+	val parser: Parser<CharStream, Iterable<Char>> = listOf(aParser, bParser, cParser).join()
+
+	val actual = parser(
+		input = CharStream(
+			data = listOf('A', 'B', 'C')
+		)
 	)
 
 	check(
