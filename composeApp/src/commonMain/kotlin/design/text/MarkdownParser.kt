@@ -2,6 +2,7 @@ package design.text
 
 import androidx.compose.ui.text.AnnotatedString
 import parsing.*
+import parsing.text.CharParser
 
 data class MarkdownState(
 	val markdown: String,

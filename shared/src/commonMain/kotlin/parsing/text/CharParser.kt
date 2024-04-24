@@ -1,4 +1,6 @@
-package parsing
+package parsing.text
+
+import parsing.Parser
 
 class CharParser(
 	private val charToMatch: Char,
@@ -44,7 +46,7 @@ private fun main() {
 		matchedItem = 'A',
 	)
 
-	val parser: CharParser = CharParser(charToMatch = 'A')
+	val parser = CharParser(charToMatch = 'A')
 
 	val actual: Parser.Result<String, Char> = parser(
 		input = "A",
