@@ -47,18 +47,18 @@ private fun main() {
 		Parser.Result.Match(input, input.first())
 	}
 
-	val secondApplicantParser: Parser<Iterable<String>, String, Throwable> = Parser { input ->
+	val secondApplicantParser: Parser<Iterable<String>, Any, Throwable> = Parser { input ->
 		Parser.Result.Match(input, input.elementAt(1))
 	}
 
 	val liftedFunction =
-		lift2<Iterable<String>, String, String, String, Throwable>(functionToLift = String::plus)
+		lift2<Iterable<String>, String, Any, String, Throwable>(functionToLift = String::plus)
 
-	val parser = liftedFunction(
-		firstApplicantParser, secondApplicantParser
-	)
+	val parser =
+		liftedFunction(firstApplicantParser, secondApplicantParser)
 
-	val actual = parser(listOf("Hello", ", World"))
+	val actual =
+		parser(listOf("Hello", ", World"))
 
 	check(
 		value = actual == expected
