@@ -38,27 +38,27 @@ fun <INPUT, OUTPUT_A, OUTPUT_B, OUTPUT_C, ERROR> lift2(
  */
 private fun main() {
 
-	val expected: Parser.Result.Match<Iterable<String>, String, Throwable> = Parser.Result.Match(
-		nextInput = listOf("Hello", ", World"),
-		matchedItem = "Hello, World",
+	val expected: Parser.Result.Match<String, Boolean, Throwable> = Parser.Result.Match(
+		nextInput = "Hello, World",
+		matchedItem = true,
 	)
 
-	val firstApplicantParser: Parser<Iterable<String>, String, Throwable> = Parser { input ->
-		Parser.Result.Match(input, input.first())
+	val firstApplicantParser: Parser<String, String, Throwable> = Parser { input ->
+		Parser.Result.Match(input, input)
 	}
 
-	val secondApplicantParser: Parser<Iterable<String>, Any, Throwable> = Parser { input ->
-		Parser.Result.Match(input, input.elementAt(1))
+	val secondApplicantParser: Parser<String, String, Throwable> = Parser { input ->
+		Parser.Result.Match(input, "Hello")
 	}
 
 	val liftedFunction =
-		lift2<Iterable<String>, String, Any, String, Throwable>(functionToLift = String::plus)
+		lift2<String, String, String, Boolean, Throwable>(functionToLift = String::startsWith)
 
 	val parser =
 		liftedFunction(firstApplicantParser, secondApplicantParser)
 
 	val actual =
-		parser(listOf("Hello", ", World"))
+		parser("Hello, World")
 
 	check(
 		value = actual == expected
