@@ -11,8 +11,8 @@ class StringParser(
 		input: TextParserState
 	): Parser.Result<TextParserState, String, Throwable> {
 
-		fun Char.toParser(): CharacterParser {
-			return CharacterParser(charToMatch = this, ignoreCase = ignoreCase)
+		fun Char.toParser(): CharParser {
+			return CharParser(charToMatch = this, ignoreCase = ignoreCase)
 		}
 
 		return stringToMatch
