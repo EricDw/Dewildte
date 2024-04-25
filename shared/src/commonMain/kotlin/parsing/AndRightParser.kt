@@ -1,6 +1,6 @@
 package parsing
 
-class AndRightParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable>(
+class AndRightParser<INPUT, OUTPUT_A, OUTPUT_B, ERROR>(
 	private val firstParser: Parser<INPUT, OUTPUT_A, ERROR>,
 	private val secondParser: Parser<INPUT, OUTPUT_B, ERROR>,
 ) : Parser<INPUT, OUTPUT_B, ERROR> {
@@ -41,7 +41,7 @@ class AndRightParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwab
 }
 
 @Suppress("FunctionName")
-infix fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable> Parser<INPUT, OUTPUT_A, ERROR>.and_(
+infix fun <INPUT, OUTPUT_A, OUTPUT_B, ERROR> Parser<INPUT, OUTPUT_A, ERROR>.and_(
 	other: Parser<INPUT, OUTPUT_B, ERROR>,
 ): Parser<INPUT, OUTPUT_B, ERROR> {
 	return AndRightParser(

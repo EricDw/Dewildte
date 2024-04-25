@@ -3,7 +3,7 @@ package design.text
 import androidx.compose.ui.text.AnnotatedString
 import parsing.*
 import parsing.text.CharParser
-import parsing.text.CharParser
+import parsing.text.PredicateTextParser
 import parsing.text.StringParser
 import parsing.text.TextParserState
 
@@ -24,7 +24,7 @@ class BoldMarkdownParser : Parser<MarkdownState, MarkdownState, Throwable> {
 		)
 
 		val textInput = TextParserState(
-			characters = input.markdown.toList(),
+			text = input.markdown,
 		)
 
 		val underscore = CharParser('_')
@@ -35,11 +35,6 @@ class BoldMarkdownParser : Parser<MarkdownState, MarkdownState, Throwable> {
 		val between = between(underscore, bold, underscore)
 
 		val textResult = between(textInput)
-
-		val notUnderscore: PredicateParser<Iterable<Char>, Throwable> = PredicateParser { chars ->
-			val char = chars.first()
-			char != '_'
-		}
 
 		val parser = underscore
 

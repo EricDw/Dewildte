@@ -1,6 +1,6 @@
 package parsing
 
-class SequenceMapParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable>(
+class SequenceMapParser<INPUT, OUTPUT_A, OUTPUT_B, ERROR>(
 	private val parsers: Iterable<Parser<INPUT, OUTPUT_A, ERROR>>,
 	private val mapper: (items: Iterable<OUTPUT_A>) -> OUTPUT_B,
 ) : Parser<INPUT, OUTPUT_B, ERROR> {
@@ -15,7 +15,7 @@ class SequenceMapParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Thro
 	}
 }
 
-fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable> Iterable<Parser<INPUT, OUTPUT_A, ERROR>>.join(
+fun <INPUT, OUTPUT_A, OUTPUT_B, ERROR> Iterable<Parser<INPUT, OUTPUT_A, ERROR>>.join(
 	mapper: (item: Iterable<OUTPUT_A>) -> OUTPUT_B,
 ): Parser<INPUT, OUTPUT_B, ERROR> {
 	return SequenceMapParser(

@@ -6,10 +6,10 @@ import parsing.join
 class StringParser(
 	private val stringToMatch: String,
 	private val ignoreCase: Boolean = false,
-) : TextParser<String, Throwable> {
+) : TextParser<String> {
 	override fun invoke(
 		input: TextParserState
-	): Parser.Result<TextParserState, String, Throwable> {
+	): TextParserResult<String> {
 
 		fun Char.toParser(): CharParser {
 			return CharParser(charToMatch = this, ignoreCase = ignoreCase)
@@ -31,14 +31,14 @@ class StringParser(
 private fun main() {
 
 	val expected = Parser.Result.Match<TextParserState, String, Throwable>(
-		nextInput = TextParserState("Hello, World".toList(), position = 5),
+		nextInput = TextParserState(text = "Hello, World", position = 5),
 		matchedItem = "Hello",
 	)
 
 	val parser = StringParser(stringToMatch = "Hello")
 
 	val actual = parser(
-		input = TextParserState("Hello, World".toList()),
+		input = TextParserState("Hello, World"),
 	)
 
 	check(

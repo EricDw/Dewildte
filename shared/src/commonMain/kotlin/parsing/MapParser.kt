@@ -1,6 +1,6 @@
 package parsing
 
-class MapParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable>(
+class MapParser<INPUT, OUTPUT_A, OUTPUT_B, ERROR>(
 	private val parserToMap: Parser<INPUT, OUTPUT_A, ERROR>,
 	private val mapper: (mathedItem: OUTPUT_A) -> OUTPUT_B,
 ) : Parser<INPUT, OUTPUT_B, ERROR> {
@@ -31,7 +31,7 @@ class MapParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable>(
 
 }
 
-infix fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, ERROR: Throwable> Parser<INPUT, OUTPUT_A, ERROR>.map(
+infix fun <INPUT, OUTPUT_A, OUTPUT_B, ERROR> Parser<INPUT, OUTPUT_A, ERROR>.map(
 	mapper: (itemToMap: OUTPUT_A) -> OUTPUT_B,
 ): Parser<INPUT, OUTPUT_B, ERROR> {
 	return MapParser(

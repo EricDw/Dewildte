@@ -1,6 +1,6 @@
 package parsing
 
-class BetweenParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, OUTPUT_C : Any, ERROR: Throwable>(
+class BetweenParser<INPUT, OUTPUT_A, OUTPUT_B, OUTPUT_C, ERROR>(
 	private val leftParser: Parser<INPUT, OUTPUT_A, ERROR>,
 	private val middleParser: Parser<INPUT, OUTPUT_B, ERROR>,
 	private val rightParser: Parser<INPUT, OUTPUT_C, ERROR>,
@@ -16,7 +16,7 @@ class BetweenParser<INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, OUTPUT_C : Any,
 
 }
 
-fun <INPUT : Any, OUTPUT_A : Any, OUTPUT_B : Any, OUTPUT_C : Any, ERROR: Throwable> between(
+fun <INPUT, OUTPUT_A, OUTPUT_B, OUTPUT_C, ERROR> between(
 	leftParser: Parser<INPUT, OUTPUT_A, ERROR>,
 	middleParser: Parser<INPUT, OUTPUT_B, ERROR>,
 	rightParser: Parser<INPUT, OUTPUT_C, ERROR>,

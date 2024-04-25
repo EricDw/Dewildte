@@ -1,6 +1,6 @@
 package parsing
 
-class OrParser<INPUT : Any, OUTPUT : Any, ERROR: Throwable>(
+class OrParser<INPUT, OUTPUT, ERROR>(
 	private val firstParser: Parser<INPUT, OUTPUT, ERROR>,
 	private val secondParser: Parser<INPUT, OUTPUT, ERROR>,
 ) : Parser<INPUT, OUTPUT, ERROR> {
@@ -23,7 +23,7 @@ class OrParser<INPUT : Any, OUTPUT : Any, ERROR: Throwable>(
 
 }
 
-infix fun <INPUT : Any, OUTPUT : Any, ERROR: Throwable> Parser<INPUT, OUTPUT, ERROR>.or(
+infix fun <INPUT, OUTPUT, ERROR> Parser<INPUT, OUTPUT, ERROR>.or(
 	other: Parser<INPUT, OUTPUT, ERROR>,
 ): Parser<INPUT, OUTPUT, ERROR> {
 	return OrParser(

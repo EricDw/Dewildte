@@ -1,6 +1,6 @@
 package parsing
 
-class SequenceParser<INPUT : Any, OUTPUT : Any, ERROR: Throwable>(
+class SequenceParser<INPUT, OUTPUT, ERROR>(
 	private val parsers: Iterable<Parser<INPUT, OUTPUT, ERROR>>,
 ) : Parser<INPUT, Iterable<OUTPUT>, ERROR> {
 
@@ -35,7 +35,7 @@ class SequenceParser<INPUT : Any, OUTPUT : Any, ERROR: Throwable>(
 	}
 }
 
-fun <INPUT : Any, OUTPUT : Any, ERROR: Throwable> Iterable<Parser<INPUT, OUTPUT, ERROR>>.join(
+fun <INPUT, OUTPUT, ERROR> Iterable<Parser<INPUT, OUTPUT, ERROR>>.join(
 ): Parser<INPUT, Iterable<OUTPUT>, ERROR> {
 	return SequenceParser(parsers = this)
 }

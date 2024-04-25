@@ -1,6 +1,6 @@
 package parsing
 
-class SomeOrNoneParser<INPUT : Any, OUTPUT : Any, ERROR: Throwable>(
+class SomeOrNoneParser<INPUT, OUTPUT, ERROR>(
 	private val parser: Parser<INPUT, OUTPUT, ERROR>,
 ) : Parser<INPUT, Iterable<OUTPUT>, ERROR> {
 
@@ -28,7 +28,7 @@ class SomeOrNoneParser<INPUT : Any, OUTPUT : Any, ERROR: Throwable>(
 	}
 }
 
-fun <INPUT : Any, OUTPUT : Any, ERROR: Throwable> someOrNone(
+fun <INPUT, OUTPUT, ERROR> someOrNone(
 	parser: Parser<INPUT, OUTPUT, ERROR>
 ): Parser<INPUT, Iterable<OUTPUT>, ERROR> {
 	return SomeOrNoneParser(parser = parser)
