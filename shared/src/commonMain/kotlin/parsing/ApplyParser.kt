@@ -34,23 +34,23 @@ infix fun <INPUT, OUTPUT_A, OUTPUT_B, ERROR> Parser<INPUT, (OUTPUT_A) -> OUTPUT_
  */
 private fun main() {
 	
-	val expected: Parser.Result.Match<Int, Char, Throwable> = Parser.Result.Match(
-		nextInput = 'A'.code,
+	val expected: Parser.Result.Match<String, Char, Throwable> = Parser.Result.Match(
+		nextInput = "ABC",
 		matchedItem = 'A',
 	)
 	
-	val applicantParser: Parser<Int, Int, Throwable> = Parser { input: Int ->
-		Parser.Result.Match(input, input)
+	val applicantParser: Parser<String, Int, Throwable> = Parser { input: String ->
+		Parser.Result.Match(input, input.first().code)
 	}
 
-	val parserToApply: Parser<Int, (Int) -> Char, Throwable> = Parser { input: Int ->
+	val parserToApply: Parser<String, (Int) -> Char, Throwable> = Parser { input: String ->
 		Parser.Result.Match(nextInput = input, ::Char)
 	}
 
 	val parser = parserToApply apply applicantParser
 
-	val actual: Parser.Result<Int, Char, Throwable> = parser(
-		input = 'A'.code,
+	val actual: Parser.Result<String, Char, Throwable> = parser(
+		input = "ABC",
 	)
 
 	check(
