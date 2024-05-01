@@ -33,12 +33,12 @@ infix fun <INPUT, OUTPUT_A, OUTPUT_B, ERROR> Parser<INPUT, (OUTPUT_A) -> OUTPUT_
  * Ensures the [ApplyParser] functions correctly.
  */
 private fun main() {
-	
+
 	val expected: Parser.Result.Match<String, Char, Throwable> = Parser.Result.Match(
 		nextInput = "ABC",
 		matchedItem = 'A',
 	)
-	
+
 	val applicantParser: Parser<String, Int, Throwable> = Parser { input: String ->
 		Parser.Result.Match(input, input.first().code)
 	}

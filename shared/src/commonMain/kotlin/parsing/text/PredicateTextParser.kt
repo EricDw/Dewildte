@@ -11,9 +11,10 @@ class PredicateTextParser(
 
 		val (text, position) = input
 
-		if (text.isEmpty()) {
+		if (text.isEmpty() || position > text.lastIndex) {
 			return Parser.Result.Failure(
-				input, TextParserError("End Of File")
+				originalInput = input,
+				error = TextParserError(message = "End Of File")
 			)
 		}
 

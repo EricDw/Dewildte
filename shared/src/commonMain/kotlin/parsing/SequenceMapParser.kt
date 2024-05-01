@@ -9,7 +9,7 @@ class SequenceMapParser<INPUT, OUTPUT_A, OUTPUT_B, ERROR>(
 		input: INPUT
 	): Parser.Result<INPUT, OUTPUT_B, ERROR> {
 
-		val parser = SequenceParser(parsers) map mapper
+		val parser = JoinParser(parsers) map mapper
 
 		return parser(input)
 	}

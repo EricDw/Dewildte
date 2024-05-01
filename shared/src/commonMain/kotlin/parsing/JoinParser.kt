@@ -1,6 +1,6 @@
 package parsing
 
-class SequenceParser<INPUT, OUTPUT, ERROR>(
+class JoinParser<INPUT, OUTPUT, ERROR>(
 	private val parsers: Iterable<Parser<INPUT, OUTPUT, ERROR>>,
 ) : Parser<INPUT, Iterable<OUTPUT>, ERROR> {
 
@@ -37,11 +37,11 @@ class SequenceParser<INPUT, OUTPUT, ERROR>(
 
 fun <INPUT, OUTPUT, ERROR> Iterable<Parser<INPUT, OUTPUT, ERROR>>.join(
 ): Parser<INPUT, Iterable<OUTPUT>, ERROR> {
-	return SequenceParser(parsers = this)
+	return JoinParser(parsers = this)
 }
 
 /**
- * Ensures the [SequenceParser] functions correctly.
+ * Ensures the [JoinParser] functions correctly.
  */
 private fun main() {
 

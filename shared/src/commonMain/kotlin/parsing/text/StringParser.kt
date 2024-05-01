@@ -18,16 +18,20 @@ class StringParser(
 		return stringToMatch
 			.map(Char::toParser)
 			.join { chars ->
-				chars.joinToString("")
+				chars.joinToString(separator = "")
 			}
 			.invoke(input)
 	}
 
 }
 
+fun String.toParser(ignoreCase: Boolean = false): TextParser<String> {
+	return StringParser(stringToMatch = this, ignoreCase = ignoreCase)
+}
+
 /**
-* Ensures the [StringParser] functions correctly.
-*/
+ * Ensures the [StringParser] functions correctly.
+ */
 private fun main() {
 
 	val expected = Parser.Result.Match<TextParserState, String, Throwable>(
@@ -35,11 +39,13 @@ private fun main() {
 		matchedItem = "Hello",
 	)
 
-	val parser = StringParser(stringToMatch = "Hello")
+	val parser =
+		"Hello".toParser()
 
-	val actual = parser(
-		input = TextParserState("Hello, World"),
-	)
+	val actual =
+		parser(
+			input = TextParserState("Hello, World"),
+		)
 
 	check(
 		value = actual == expected

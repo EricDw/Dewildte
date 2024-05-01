@@ -21,11 +21,11 @@ class OneOrMoreParser<INPUT, OUTPUT, ERROR>(
 		val output: List<OUTPUT> = buildList {
 
 			while (result !is Parser.Result.Failure) {
-				result = parser(nextInput)
 				(result as? Parser.Result.Match)?.let {
 					nextInput = it.nextInput
 					add(it.matchedItem)
 				}
+				result = parser(nextInput)
 			}
 		}
 
@@ -55,15 +55,15 @@ private fun main() {
 	val expected: Parser.Result.Match<CharStream, Iterable<Char>, Throwable> = Parser.Result.Match(
 		nextInput = CharStream(
 			data = listOf('A', 'A', 'A', 'B', 'C'),
-			position = 3,
+			position = 4,
 		),
-		matchedItem = listOf('A', 'A', 'A'),
+		matchedItem = listOf('A', 'A', 'A', 'B'),
 	)
 
 	val aParser = Parser { input: CharStream ->
 		val item = input.data.elementAt(input.position)
 
-		if (item == 'A') {
+		if (item == 'A' || item == 'B') {
 			Parser.Result.Match(
 				nextInput = input.copy(position = input.position.inc()),
 				matchedItem = item,

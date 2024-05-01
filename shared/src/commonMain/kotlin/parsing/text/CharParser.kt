@@ -12,7 +12,10 @@ class CharParser(
 	): TextParserResult<Char> {
 
 		val parser = satisfies { char ->
-			char.equals(other = charToMatch, ignoreCase = ignoreCase)
+			char.equals(
+				other = charToMatch,
+				ignoreCase = ignoreCase
+			)
 		}
 
 		return parser(input)
