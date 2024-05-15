@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import design.text.Markdown
 import design.text.Paragraph
 import design.text.Title
 import domain.*
@@ -39,7 +40,8 @@ fun Post(
 				}
 
 				is ParagraphItem -> {
-					Paragraph(text = item.text)
+					Markdown(value = item.text)
+//					Paragraph(text = item.text)
 				}
 
 				is TitleItem -> {
@@ -58,7 +60,7 @@ private fun PostPreview() {
 	val post = post {
 		title { """Title""" }
 
-		paragraph { """Paragraph""" }
+		paragraph { """Paragraph now with _bolding_!""" }
 
 		composable {
 			Button(onClick = {}) {

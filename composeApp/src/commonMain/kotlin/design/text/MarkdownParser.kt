@@ -54,8 +54,8 @@ class BoldMarkdownParser : Parser<MarkdownState, MarkdownState, Throwable> {
 private fun main() {
 
 	val markdown = """_bold_"""
-
-	val input = TextParserState(markdown.toList())
+""
+	val input = TextParserState(markdown)
 
 	val underscore = CharParser('_')
 	val bold = StringParser("bold")

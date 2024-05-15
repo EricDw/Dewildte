@@ -33,8 +33,8 @@ fun HomeScreen() {
 		}
 
 		paragraph {
-			"""WARNING:
-				|This place is a bit of a proving grounds for me and as such it is often using experiemental technology.
+			"""_WARNING:_
+				|This place is a bit of a proving grounds for me and as such it is often using experimental technology.
 				|I apologise in advance for any bugs or glitches caused by any instability you find here."""
 		}
 	}
