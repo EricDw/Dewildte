@@ -40,7 +40,7 @@ fun WebApp() {
 	val rootRoutes = listOf(
 		HomeRoute,
 		ProfileRoute,
-		BlogRoute
+		BlogRoute,
 	)
 
 	ModalNavigationDrawer(
