@@ -10,7 +10,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import design.text.Markdown
-import design.text.Paragraph
 import design.text.Title
 import domain.*
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -41,7 +40,6 @@ fun Post(
 
 				is ParagraphItem -> {
 					Markdown(value = item.text)
-//					Paragraph(text = item.text)
 				}
 
 				is TitleItem -> {
