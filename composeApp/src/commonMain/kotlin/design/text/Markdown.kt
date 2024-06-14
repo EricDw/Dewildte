@@ -86,11 +86,11 @@ fun Markdown(
 			}
 		}
 
-	SelectionContainer {
+//	SelectionContainer {
 		Text(
 			text = text,
 		)
-	}
+//	}
 
 }
 
