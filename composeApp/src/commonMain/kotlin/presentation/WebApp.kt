@@ -177,7 +177,7 @@ fun WebApp() {
 				topBar = {
 					CenterAlignedTopAppBar(
 						title = {
-							Text(text = stringResource(Res.string.label_my_name))
+							Text(text = stringResource(Res.string.label_website_name))
 						}
 					)
 				}

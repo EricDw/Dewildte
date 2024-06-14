@@ -5,8 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import design.text.Markdown
@@ -49,6 +48,20 @@ fun Post(
 			}
 		}
 	}
+
+}
+
+@Composable
+fun Post(
+	modifier: Modifier = Modifier,
+	initializer: Post.Builder.() -> Unit,
+) {
+	val postState = remember(initializer) {
+		val post = RealPostBuilder().apply(initializer).build()
+		PostState(post = post)
+	}
+
+	Post(state = postState, modifier = modifier)
 
 }
 

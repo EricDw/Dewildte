@@ -1,13 +1,16 @@
 package presentation.profile
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import dewildte.composeapp.generated.resources.Res
+import dewildte.composeapp.generated.resources.profile_image
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import presentation.posts.Post
 
 @Composable
 @Preview
@@ -15,15 +18,37 @@ fun ProfileScreen() {
 	val contentModifier = Modifier
 		.fillMaxSize()
 
-	Box(
-		modifier = contentModifier,
-		contentAlignment = Alignment.Center,
+	Post(
+		modifier = contentModifier
 	) {
-		val message = """Profile""".trimMargin()
-		Text(
-			text = message,
-			style = MaterialTheme.typography.bodyMedium,
-		)
+
+		composable {
+
+			val imageResource = Res.drawable.profile_image
+
+			Image(
+				painter = painterResource(imageResource),
+				contentDescription = null,
+				modifier = Modifier.clip(CircleShape)
+			)
+
+		}
+
+		paragraph {
+			"""_Name:_ Eric De Wildt
+			|_Location:_ Ontario, Canada
+			|_LinkedIn:_ https://www.linkedin.com/in/eric-de-wildt
+			|_E-Mail:_ dewildte@gmail.com
+			""".trimMargin()
+		}
+
+		paragraph {
+			"""I live for love and spend a lot of my time serving my friends and family.
+			|When I am not serving others or outside I am crafting software.
+			|I deeply enjoy sitting at my desk creating things with Kotlin.
+			|For example, this website is built using Kotlin.
+			""".trimMargin()
+		}
 	}
-	
+
 }
