@@ -65,6 +65,7 @@ kotlin {
 			implementation(compose.components.resources)
 			implementation(compose.components.uiToolingPreview)
 			implementation(projects.shared)
+			implementation(libs.compose.navigation)
 //            implementation(libs.ktor.client.core)
 //            implementation(libs.kotlinx.coroutines.core)
 		}

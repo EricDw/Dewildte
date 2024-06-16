@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import dewildte.composeapp.generated.resources.Res
@@ -26,11 +27,17 @@ fun ProfileScreen() {
 
 			val imageResource = Res.drawable.profile_image
 
-			Image(
-				painter = painterResource(imageResource),
-				contentDescription = null,
-				modifier = Modifier.clip(CircleShape)
-			)
+			Box(
+				modifier = Modifier.fillMaxSize(),
+				contentAlignment = Alignment.Center
+			) {
+
+				Image(
+					painter = painterResource(imageResource),
+					contentDescription = null,
+					modifier = Modifier.clip(CircleShape)
+				)
+			}
 
 		}
 

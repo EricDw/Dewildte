@@ -7,7 +7,7 @@ This documents encapsulates various processes and commands used to maintain and 
 On a Nix based computer you can run the following command from the `root` directory:
 
 ``` bash
-./gradlew wasmJsBrowserDistribution ; cp -a composeApp/build/dist/wasmJs/productionExecutable/. docs/
+./gradlew clean ; ./gradlew wasmJsBrowserDistribution ; cp -a composeApp/build/dist/wasmJs/productionExecutable/. docs/
 ```
 This command builds the production Web Assembly code and then copies the output to the `docs/` directory.
 This is because (at the time of writing this document) the project is published using Github Pages.
