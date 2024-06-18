@@ -91,12 +91,10 @@ fun WebApp() {
                 VerticalSpacer100()
 
                 FloatingActionButton(
+                    elevation = FloatingActionButtonDefaults.loweredElevation(),
                     onClick = {
-                        // TODO: Implement search
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
+                        // TODO: Implement Search
+                    },
                 ) {
                     SearchIcon()
                 }
@@ -167,7 +165,7 @@ fun WebApp() {
 
                     ModalDrawerSheet {
 
-                    Text(text = "TODO", modifier = Modifier.fillMaxHeight(), textAlign = TextAlign.Center)
+                        Text(text = "TODO", modifier = Modifier.fillMaxHeight(), textAlign = TextAlign.Center)
 
                         /*rootRoutes.forEach { route ->
 
