@@ -5,7 +5,7 @@ private fun main() {
 	val lexer = MarkdownLexer()
 
 	val markdown =
-		"Hello, _*World*_!"
+		"Hello, __*World*__!"
 
 	val tokens =
 		lexer.analyzeMarkdown(markdown)
@@ -14,5 +14,8 @@ private fun main() {
 	tokens.forEach(::println)
 	println()
 	println(tokens.joinToString("") { it.value })
+	check(tokens.size == 7) {
+		"Expected: 7 tokens, found: ${tokens.size}"
+	}
 
 }

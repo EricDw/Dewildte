@@ -19,8 +19,11 @@ class MarkdownLexer {
 		val emphasis =
 			EmphasisMarkdownTextParser()
 
+		val strong =
+			StrongMarkdownTextParser()
+
 		val parser =
-			oneOrMore(emphasis or plainText)
+			oneOrMore(strong or emphasis or plainText)
 
 		val input =
 			MarkdownParserState(

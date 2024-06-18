@@ -15,18 +15,18 @@ class EmphasisMarkdownTextParser : MarkdownTextParser<MarkdownToken> {
 		val (markdown, position, tokens) =
 			input
 
-		val boldParser =
-			CharParser('_') map {
-				"$it" to MarkdownToken.Emphasis.Type.BOLD
+		val underscoresParser =
+			StringParser("_") map {
+				it to MarkdownToken.Emphasis.Type.ITALIC
 			}
 
-		val italicParser =
-			CharParser('*') map {
-				"$it" to MarkdownToken.Emphasis.Type.ITALIC
+		val asterisksParser =
+			StringParser("*") map {
+				it to MarkdownToken.Emphasis.Type.ITALIC
 			}
 
 		val typeParser =
-			boldParser or italicParser
+			underscoresParser or asterisksParser
 
 		val parser =
 			typeParser map { (value, type) ->
