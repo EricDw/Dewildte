@@ -7,11 +7,11 @@ import androidx.compose.ui.Modifier
 @Composable
 fun EditIcon(
 	modifier: Modifier = Modifier,
-	contentDescripion: String? = null,
+	contentDescription: String? = null,
 ) {
 	Icon(
 		modifier = modifier,
 		imageVector = Icons.Default.Edit,
-		contentDescription = contentDescripion,
+		contentDescription = contentDescription,
 	)
 }

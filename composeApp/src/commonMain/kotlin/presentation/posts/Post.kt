@@ -42,7 +42,10 @@ fun Post(
 				}
 
 				is TitleItem -> {
-					Title(text = item.text)
+					Title(
+						text = item.text,
+						modifier = Modifier.fillMaxWidth(),
+					)
 					Spacer(Modifier.height(8.dp))
 				}
 			}

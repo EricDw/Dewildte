@@ -1,40 +1,40 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package presentation
 
 import BlogIcon
 import HomeIcon
-import MenuIcon
 import ProfileIcon
+import SearchIcon
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import dewildte.composeapp.generated.resources.*
+import design.space.VerticalSpacer100
+import dewildte.composeapp.generated.resources.Res
+import dewildte.composeapp.generated.resources.label_blog
+import dewildte.composeapp.generated.resources.label_home
+import dewildte.composeapp.generated.resources.label_profile
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import presentation.blog.BASE_BLOG_ROUTE
+import presentation.blog.BLOG_NAVIGATION_GRAPH_ROUTE
 import presentation.blog.BlogRoute
-import presentation.blog.blog
-import presentation.home.BASE_HOME_ROUTE
+import presentation.blog.blogNavigationGraph
+import presentation.home.HOME_NAVIGATION_GRAPH_ROUTE
 import presentation.home.HomeRoute
-import presentation.home.home
+import presentation.home.homeNavigationGraph
 import presentation.navigation.Route
-import presentation.profile.BASE_PROFILE_ROUTE
+import presentation.profile.PROFILE_NAVIGATION_GRAPH_ROUTE
 import presentation.profile.ProfileRoute
-import presentation.profile.profile
+import presentation.profile.profileNavigationGraph
 
 @Composable
 @Preview
@@ -60,195 +60,198 @@ fun WebApp() {
             drawerState.close()
 
             when (route) {
-                is HomeRoute    -> {
+                is HomeRoute -> {
                     navController.navigate(
-                        route = BASE_HOME_ROUTE
+                        route = HOME_NAVIGATION_GRAPH_ROUTE
                     )
                 }
 
                 is ProfileRoute -> {
                     navController.navigate(
-                        route = BASE_PROFILE_ROUTE
+                        route = PROFILE_NAVIGATION_GRAPH_ROUTE
                     )
                 }
 
-                is BlogRoute    -> {
+                is BlogRoute -> {
                     navController.navigate(
-                        route = BASE_BLOG_ROUTE
+                        route = BLOG_NAVIGATION_GRAPH_ROUTE
                     )
                 }
             }
         }
     }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
 
-                rootRoutes.forEach { route ->
-
-                    NavigationDrawerItem(
-                        selected = selectedRoute == route,
-                        onClick = {
-                            performRootNavigation(route)
-                        },
-                        icon = {
-                            when (route) {
-                                is HomeRoute    -> {
-                                    HomeIcon()
-                                }
-
-                                is ProfileRoute -> {
-                                    ProfileIcon()
-                                }
-
-                                is BlogRoute    -> {
-                                    BlogIcon()
-                                }
-                            }
-                        },
-                        label = {
-                            val resource = when (route) {
-                                is HomeRoute    -> {
-                                    Res.string.label_home
-                                }
-
-                                is ProfileRoute -> {
-                                    Res.string.label_profile
-                                }
-
-                                is BlogRoute    -> {
-                                    Res.string.label_blog
-                                }
-
-                                else            -> {
-                                    null
-                                }
-                            }
-
-                            resource?.let {
-                                Text(text = stringResource(it))
-                            }
-
-                        }
-                    )
-                }
-            }
-        },
+    Row(
+        modifier = Modifier.fillMaxSize(),
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
+
+        NavigationRail(
+            header = {
+                VerticalSpacer100()
+
+                FloatingActionButton(
+                    onClick = {
+                        // TODO: Implement search
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    }
+                ) {
+                    SearchIcon()
+                }
+            },
         ) {
 
-            NavigationRail(
-                header = {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.open()
+            rootRoutes.forEach { route ->
+
+                NavigationRailItem(
+                    selected = selectedRoute == route,
+                    onClick = {
+                        scope.launch {
+                            drawerState.close()
+                            performRootNavigation(route)
+                        }
+                    },
+                    icon = {
+                        when (route) {
+                            is HomeRoute -> {
+                                HomeIcon()
+                            }
+
+                            is ProfileRoute -> {
+                                ProfileIcon()
+                            }
+
+                            is BlogRoute -> {
+                                BlogIcon()
                             }
                         }
-                    ) {
-                        MenuIcon()
+                    },
+                    label = {
+                        val resource = when (route) {
+                            is HomeRoute -> {
+                                Res.string.label_home
+                            }
+
+                            is ProfileRoute -> {
+                                Res.string.label_profile
+                            }
+
+                            is BlogRoute -> {
+                                Res.string.label_blog
+                            }
+
+                            else -> {
+                                null
+                            }
+                        }
+
+                        resource?.let {
+                            Text(text = stringResource(it))
+                        }
+
+                    }
+                )
+            }
+        }
+
+        Scaffold { contentPadding ->
+
+            ModalNavigationDrawer(
+                modifier = Modifier.fillMaxSize().padding(contentPadding),
+                drawerState = drawerState,
+                gesturesEnabled = drawerState.isOpen,
+                scrimColor = Color.Transparent,
+                drawerContent = {
+
+                    ModalDrawerSheet {
+
+                    Text(text = "TODO", modifier = Modifier.fillMaxHeight(), textAlign = TextAlign.Center)
+
+                        /*rootRoutes.forEach { route ->
+
+                            NavigationDrawerItem(
+                                selected = selectedRoute == route,
+                                onClick = {
+                                    performRootNavigation(route)
+                                },
+                                icon = {
+                                    when (route) {
+                                        is HomeRoute -> {
+                                            HomeIcon()
+                                        }
+
+                                        is ProfileRoute -> {
+                                            ProfileIcon()
+                                        }
+
+                                        is BlogRoute -> {
+                                            BlogIcon()
+                                        }
+                                    }
+                                },
+                                label = {
+                                    val resource = when (route) {
+                                        is HomeRoute -> {
+                                            Res.string.label_home
+                                        }
+
+                                        is ProfileRoute -> {
+                                            Res.string.label_profile
+                                        }
+
+                                        is BlogRoute -> {
+                                            Res.string.label_blog
+                                        }
+
+                                        else -> {
+                                            null
+                                        }
+                                    }
+
+                                    resource?.let {
+                                        Text(text = stringResource(it))
+                                    }
+
+                                }
+                            )
+                        }*/
                     }
                 },
             ) {
 
-                rootRoutes.forEach { route ->
-
-                    NavigationRailItem(
-                        selected = selectedRoute == route,
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                                performRootNavigation(route)
-                            }
-                        },
-                        icon = {
-                            when (route) {
-                                is HomeRoute    -> {
-                                    HomeIcon()
-                                }
-
-                                is ProfileRoute -> {
-                                    ProfileIcon()
-                                }
-
-                                is BlogRoute    -> {
-                                    BlogIcon()
-                                }
-                            }
-                        },
-                        label = {
-                            val resource = when (route) {
-                                is HomeRoute    -> {
-                                    Res.string.label_home
-                                }
-
-                                is ProfileRoute -> {
-                                    Res.string.label_profile
-                                }
-
-                                is BlogRoute    -> {
-                                    Res.string.label_blog
-                                }
-
-                                else            -> {
-                                    null
-                                }
-                            }
-
-                            resource?.let {
-                                Text(text = stringResource(it))
-                            }
-
-                        }
-                    )
-                }
-            }
-
-            Scaffold(
-                topBar = {
-                    CenterAlignedTopAppBar(
-                        title = {
-                            Text(text = stringResource(Res.string.label_website_name))
-                        }
-                    )
-                }
-            ) { contentPadding ->
-
                 val contentModifier = Modifier
                     .fillMaxSize()
-                    .padding(contentPadding)
 
                 NavHost(
                     navController = navController,
                     modifier = contentModifier,
-                    startDestination = BASE_HOME_ROUTE,
+                    startDestination = HOME_NAVIGATION_GRAPH_ROUTE,
                 ) {
-                    home()
-                    profile()
-                    blog()
+                    homeNavigationGraph()
+                    profileNavigationGraph()
+                    blogNavigationGraph()
                 }
 
             }
         }
 
-        LaunchedEffect(navController) {
-            navController.addOnDestinationChangedListener { _, destination, _ ->
-                when (destination.route) {
-                    BASE_HOME_ROUTE    -> {
-                        selectedRoute = HomeRoute
-                    }
+    }
 
-                    BASE_PROFILE_ROUTE -> {
-                        selectedRoute = ProfileRoute
-                    }
+    LaunchedEffect(navController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.parent?.route) {
+                HOME_NAVIGATION_GRAPH_ROUTE -> {
+                    selectedRoute = HomeRoute
+                }
 
-                    BASE_BLOG_ROUTE    -> {
-                        selectedRoute = BlogRoute
-                    }
+                PROFILE_NAVIGATION_GRAPH_ROUTE -> {
+                    selectedRoute = ProfileRoute
+                }
+
+                BLOG_NAVIGATION_GRAPH_ROUTE -> {
+                    selectedRoute = BlogRoute
                 }
             }
         }

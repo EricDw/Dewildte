@@ -1,50 +1,105 @@
 package presentation.home
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import domain.post
+import androidx.compose.ui.unit.dp
+import design.space.*
+import design.text.Markdown
+import dewildte.composeapp.generated.resources.Res
+import dewildte.composeapp.generated.resources.android_logo
+import dewildte.composeapp.generated.resources.compose_multiplatform
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import presentation.posts.Post
-import presentation.posts.PostState
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 @Preview
 fun HomeScreen() {
-	val contentModifier = Modifier
-		.fillMaxSize()
+    val contentModifier = Modifier
+        .fillMaxSize()
+        .padding(MaterialTheme.spacing.spacing200.dp)
 
-	val post = post {
-		title {
-			"""Hello, World!"""
-		}
+    Column(
+        modifier = contentModifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = "Hello World!",
+            style = MaterialTheme.typography.displayLarge
+        )
 
-		paragraph {
-			"""Welcome to my website!"""
-		}
+        VerticalSpacer100()
 
-		paragraph {
-			"""I am proud to say that I built this website using Kotlin Multilplatform 😎
-				|The purpose of this website is to showcase my software development skills and host my personal blog."""
-		}
+        Text(
+            text = "Brought to you by:",
+            style = MaterialTheme.typography.titleLarge,
+        )
 
-		paragraph {
-			"""Thank you so much for visiting, I hope you have a fun time poking around."""
-		}
+        VerticalSpacer200()
 
-		paragraph {
-			"""_WARNING:_
-				|This place is a bit of a proving grounds for me and as such it is often using experimental technology.
-				|I apologise in advance for any bugs or glitches caused by any instability you find here."""
-		}
-	}
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
 
-	val postState = PostState(
-		post = post
-	)
+            Card {
 
-	Post(
-		state = postState,
-		modifier = contentModifier
-	)
+                Column(
+                    modifier = Modifier.padding(MaterialTheme.spacing.spacing100.dp),
+                ) {
+
+                    Image(
+                        modifier = Modifier.align(Alignment.CenterHorizontally).size(100.dp),
+                        painter = painterResource(Res.drawable.compose_multiplatform),
+                        contentDescription = null
+                    )
+
+                    VerticalSpacer025()
+
+                    Text(
+                        text = "Compose Multiplatform",
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+
+            }
+
+        }
+
+    }
+
+//    Post(
+//        modifier = contentModifier,
+//    ) {
+//        title {
+//            """Hello, World!"""
+//        }
+//
+//        paragraph {
+//            """Welcome to my website!"""
+//        }
+//
+//        paragraph {
+//            """Welcome to my website!
+//            |
+//            |The purpose of this website is to showcase my software development skills and host my personal blog.
+//			|I am proud to say that I built this website using Kotlin Multilplatform!""".trimMargin()
+//        }
+//
+//        paragraph {
+//            """Thank you so much for visiting, I hope you have a fun time poking around."""
+//        }
+//
+//        paragraph {
+//            """_WARNING:_
+//				|This place is a bit of a proving grounds for me and as such it is often using experimental technology.
+//				|I apologise in advance for any bugs or glitches caused by any instability you find here."""
+//        }
+//    }
 }

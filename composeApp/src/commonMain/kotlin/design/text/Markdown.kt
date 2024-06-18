@@ -1,6 +1,5 @@
 package design.text
 
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,92 +14,94 @@ import parsing.markdown.lexer.MarkdownToken
 
 @Composable
 fun Markdown(
-	value: String
+    value: String,
+    modifier: Modifier = Modifier,
 ) {
-	val lexer = MarkdownLexer()
+    val lexer = MarkdownLexer()
 
-	val tokens = lexer.analyzeMarkdown(value)
+    val tokens = lexer.analyzeMarkdown(value)
 
-	val annotatedStrings = tokens.map { token ->
-		when (token) {
-			is MarkdownToken.Emphasis -> {
-				buildAnnotatedString {
-					append(token.value)
-					pushStyle(SpanStyle())
-				}
+    val annotatedStrings = tokens.map { token ->
+        when (token) {
+            is MarkdownToken.Emphasis -> {
+                buildAnnotatedString {
+                    append(token.value)
+                    pushStyle(SpanStyle())
+                }
 
-			}
+            }
 
-			is MarkdownToken.Heading -> {
-				buildAnnotatedString {
-					append(token.value)
-				}
-			}
+            is MarkdownToken.Heading -> {
+                buildAnnotatedString {
+                    append(token.value)
+                }
+            }
 
-			is MarkdownToken.PlainTextSpan -> {
-				buildAnnotatedString {
-					append(token.value)
-				}
-			}
-		}
-	}
+            is MarkdownToken.PlainTextSpan -> {
+                buildAnnotatedString {
+                    append(token.value)
+                }
+            }
+        }
+    }
 
-	val text =
-		buildAnnotatedString {
+    val text =
+        buildAnnotatedString {
 
-			var boldIndex: Int? = null
-			var italicIndex: Int? = null
+            var boldIndex: Int? = null
+            var italicIndex: Int? = null
 
-			tokens.forEach { token ->
-				when (token) {
-					is MarkdownToken.Emphasis -> {
-						when (token.type) {
-							MarkdownToken.Emphasis.Type.BOLD -> {
-								if (boldIndex == null) {
-									boldIndex = pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
-								} else {
-									pop(boldIndex!!)
-									boldIndex = null
-								}
-							}
+            tokens.forEach { token ->
+                when (token) {
+                    is MarkdownToken.Emphasis -> {
+                        when (token.type) {
+                            MarkdownToken.Emphasis.Type.BOLD -> {
+                                if (boldIndex == null) {
+                                    boldIndex = pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+                                } else {
+                                    pop(boldIndex!!)
+                                    boldIndex = null
+                                }
+                            }
 
-							MarkdownToken.Emphasis.Type.ITALIC -> {
-								if (italicIndex == null) {
-									italicIndex = pushStyle(SpanStyle(fontStyle = FontStyle.Italic))
-								} else {
-									pop(italicIndex!!)
-									italicIndex = null
-								}
-							}
-						}
-					}
+                            MarkdownToken.Emphasis.Type.ITALIC -> {
+                                if (italicIndex == null) {
+                                    italicIndex = pushStyle(SpanStyle(fontStyle = FontStyle.Italic))
+                                } else {
+                                    pop(italicIndex!!)
+                                    italicIndex = null
+                                }
+                            }
+                        }
+                    }
 
-					is MarkdownToken.Heading -> {
-						append(token.value)
-					}
+                    is MarkdownToken.Heading -> {
+                        append(token.value)
+                    }
 
-					is MarkdownToken.PlainTextSpan -> {
-						append(token.value)
-					}
-				}
-			}
-		}
+                    is MarkdownToken.PlainTextSpan -> {
+                        append(token.value)
+                    }
+                }
+            }
+        }
 
-	SelectionContainer {
-		Text(
-			text = text,
-		)
-	}
+    SelectionContainer {
+        Text(
+            text = text,
+            modifier = modifier,
+        )
+    }
 
 }
 
 @Preview
 @Composable
 private fun MarkdownPreview() {
-	val markdown = """Hello, _*World*_ !
+    val markdown = """Hello, _*World*_ !
 		|
 		|What is _going_ on?
 	""".trimMargin()
 
-	Markdown(value = markdown)
+    Markdown(value = markdown)
 }

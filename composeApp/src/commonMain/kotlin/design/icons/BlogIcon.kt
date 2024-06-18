@@ -9,11 +9,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun BlogIcon(
 	modifier: Modifier = Modifier,
-	contentDescripion: String? = null,
+	contentDescription: String? = null,
 ) {
 	Icon(
 		modifier = modifier,
 		imageVector = Icons.Default.Edit,
-		contentDescription = contentDescripion,
+		contentDescription = contentDescription,
 	)
 }

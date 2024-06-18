@@ -66,8 +66,10 @@ kotlin {
 			implementation(compose.components.uiToolingPreview)
 			implementation(projects.shared)
 			implementation(libs.compose.navigation)
-//            implementation(libs.ktor.client.core)
-//            implementation(libs.kotlinx.coroutines.core)
+		}
+
+		wasmJsMain.dependencies {
+			// Web Assembly dependencies go here.
 		}
 
 		desktopMain.dependencies {

@@ -10,5 +10,5 @@ On a Nix based computer you can run the following command from the `root` direct
 ./gradlew clean ; ./gradlew wasmJsBrowserDistribution ; cp -a composeApp/build/dist/wasmJs/productionExecutable/. docs/
 ```
 This command builds the production Web Assembly code and then copies the output to the `docs/` directory.
-This is because (at the time of writing this document) the project is published using Github Pages.
+This is because (at the time of writing this document) the project is published using GitHub Pages.
 Pages will gather it's required data from the `docs/` folder.
