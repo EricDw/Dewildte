@@ -1,4 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
@@ -28,6 +30,17 @@ kotlin {
 	}
 
 	androidTarget {
+
+		@OptIn(ExperimentalKotlinGradlePluginApi::class)
+		instrumentedTestVariant {
+			sourceSetTree.set(KotlinSourceSetTree.test)
+
+			dependencies {
+				implementation("androidx.compose.ui:ui-test-junit4-android:1.6.8")
+				debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
+			}
+		}
+
 		compilations.all {
 			kotlinOptions {
 				jvmTarget = "11"
@@ -61,6 +74,7 @@ kotlin {
 			implementation(compose.runtime)
 			implementation(compose.foundation)
 			implementation(compose.material3)
+			implementation(compose.materialIconsExtended)
 			implementation(compose.ui)
 			implementation(compose.components.resources)
 			implementation(compose.components.uiToolingPreview)
@@ -124,10 +138,6 @@ android {
 	dependencies {
 		debugImplementation(libs.compose.ui.tooling)
 	}
-}
-
-compose {
-
 }
 
 compose.desktop {

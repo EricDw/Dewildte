@@ -1,4 +1,4 @@
-_Welcome_ to my slice of the internet!
+__Welcome__ to my slice of the internet!
 (If you are reading this then my custom-built Markdown parser is working!)
 
 I built this website for you.
@@ -8,6 +8,7 @@ I will be populating the website with various bits and bobs.
 Here's a checklist of things I hope to put here: 
 
 -[ ] Support for Markdown
+-[ ] Minimalist Markdown Editor
 -[ ] Resume
 -[ ] Math Trainer
 

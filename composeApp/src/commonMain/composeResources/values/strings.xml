@@ -4,4 +4,5 @@
     <string name="label_home">Home</string>
     <string name="label_profile">Profile</string>
     <string name="label_blog">Blog</string>
+    <string name="label_markdown_editor">Editor</string>
 </resources>

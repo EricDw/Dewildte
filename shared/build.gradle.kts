@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
@@ -22,11 +23,14 @@ kotlin {
     }
     
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "11"
-            }
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
         }
+//        compilations.all {
+//            kotlinOptions {
+//                jvmTarget = "11"
+//            }
+//        }
     }
     
     iosX64()
@@ -38,6 +42,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // put your Multiplatform dependencies here
+        }
+
+        commonTest.dependencies {
+            // put your Multiplatform test dependencies here
+            implementation(libs.kotlin.test)
         }
     }
 }

@@ -17,7 +17,7 @@ class ExampleJUnitTest {
 		//
 		// Replace with your own declarations to test the code in your project
 		rule.setContent {
-			var text by remember { mutableStateOf("Jello") }
+			var text by remember { mutableStateOf("Hello") }
 
 			Text(
 				text = text,

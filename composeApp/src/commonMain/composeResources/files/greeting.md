@@ -8,6 +8,7 @@ I will be populating the website with various bits and bobs.
 Here's a checklist of things I hope to put here: 
 
 -[ ] Support for Markdown
+-[ ] Minimalist Markdown Editor
 -[ ] Resume
 -[ ] Math Trainer
 

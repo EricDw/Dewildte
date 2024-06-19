@@ -3,13 +3,11 @@
 package presentation
 
 import BlogIcon
+import EditIcon
 import HomeIcon
 import ProfileIcon
 import SearchIcon
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import design.space.VerticalSpacer100
+import dewildte.composeapp.generated.resources.*
 import dewildte.composeapp.generated.resources.Res
 import dewildte.composeapp.generated.resources.label_blog
 import dewildte.composeapp.generated.resources.label_home
@@ -28,6 +27,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import presentation.blog.BLOG_NAVIGATION_GRAPH_ROUTE
 import presentation.blog.BlogRoute
 import presentation.blog.blogNavigationGraph
+import presentation.editor.MARKDOWN_EDITOR_NAVIGATION_GRAPH_ROUTE
+import presentation.editor.MarkdownEditorRoute
+import presentation.editor.markdownEditorNavigationGraph
 import presentation.home.HOME_NAVIGATION_GRAPH_ROUTE
 import presentation.home.HomeRoute
 import presentation.home.homeNavigationGraph
@@ -46,6 +48,7 @@ fun WebApp() {
     val rootRoutes = listOf(
         HomeRoute,
         ProfileRoute,
+        MarkdownEditorRoute,
         BlogRoute,
     )
 
@@ -63,6 +66,12 @@ fun WebApp() {
                 is HomeRoute -> {
                     navController.navigate(
                         route = HOME_NAVIGATION_GRAPH_ROUTE
+                    )
+                }
+
+                is MarkdownEditorRoute -> {
+                    navController.navigate(
+                        route = MARKDOWN_EDITOR_NAVIGATION_GRAPH_ROUTE
                     )
                 }
 
@@ -88,69 +97,83 @@ fun WebApp() {
 
         NavigationRail(
             header = {
-                VerticalSpacer100()
-
-                FloatingActionButton(
-                    elevation = FloatingActionButtonDefaults.loweredElevation(),
-                    onClick = {
-                        // TODO: Implement Search
-                    },
-                ) {
-                    SearchIcon()
-                }
+//                VerticalSpacer100()
+//
+//                FloatingActionButton(
+//                    elevation = FloatingActionButtonDefaults.loweredElevation(),
+//                    onClick = {
+//                        // TODO: Implement Search
+//                    },
+//                ) {
+//                    SearchIcon()
+//                }
             },
         ) {
 
-            rootRoutes.forEach { route ->
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
 
-                NavigationRailItem(
-                    selected = selectedRoute == route,
-                    onClick = {
-                        scope.launch {
-                            drawerState.close()
-                            performRootNavigation(route)
+                rootRoutes.forEach { route ->
+
+                    NavigationRailItem(
+                        selected = selectedRoute == route,
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                                performRootNavigation(route)
+                            }
+                        },
+                        icon = {
+                            when (route) {
+                                is HomeRoute -> {
+                                    HomeIcon()
+                                }
+
+                                is MarkdownEditorRoute -> {
+                                    EditIcon()
+                                }
+
+                                is ProfileRoute -> {
+                                    ProfileIcon()
+                                }
+
+                                is BlogRoute -> {
+                                    BlogIcon()
+                                }
+                            }
+                        },
+                        label = {
+                            val resource = when (route) {
+                                is HomeRoute -> {
+                                    Res.string.label_home
+                                }
+
+                                is MarkdownEditorRoute -> {
+                                    Res.string.label_markdown_editor
+                                }
+
+                                is ProfileRoute -> {
+                                    Res.string.label_profile
+                                }
+
+                                is BlogRoute -> {
+                                    Res.string.label_blog
+                                }
+
+                                else -> {
+                                    null
+                                }
+                            }
+
+                            resource?.let {
+                                Text(text = stringResource(it))
+                            }
+
                         }
-                    },
-                    icon = {
-                        when (route) {
-                            is HomeRoute -> {
-                                HomeIcon()
-                            }
-
-                            is ProfileRoute -> {
-                                ProfileIcon()
-                            }
-
-                            is BlogRoute -> {
-                                BlogIcon()
-                            }
-                        }
-                    },
-                    label = {
-                        val resource = when (route) {
-                            is HomeRoute -> {
-                                Res.string.label_home
-                            }
-
-                            is ProfileRoute -> {
-                                Res.string.label_profile
-                            }
-
-                            is BlogRoute -> {
-                                Res.string.label_blog
-                            }
-
-                            else -> {
-                                null
-                            }
-                        }
-
-                        resource?.let {
-                            Text(text = stringResource(it))
-                        }
-
-                    }
-                )
+                    )
+                }
             }
         }
 
@@ -228,6 +251,7 @@ fun WebApp() {
                     startDestination = HOME_NAVIGATION_GRAPH_ROUTE,
                 ) {
                     homeNavigationGraph()
+                    markdownEditorNavigationGraph()
                     profileNavigationGraph()
                     blogNavigationGraph()
                 }
@@ -242,6 +266,10 @@ fun WebApp() {
             when (destination.parent?.route) {
                 HOME_NAVIGATION_GRAPH_ROUTE -> {
                     selectedRoute = HomeRoute
+                }
+
+                MARKDOWN_EDITOR_NAVIGATION_GRAPH_ROUTE -> {
+                    selectedRoute = MarkdownEditorRoute
                 }
 
                 PROFILE_NAVIGATION_GRAPH_ROUTE -> {

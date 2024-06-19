@@ -3,10 +3,17 @@ package presentation.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
+import design.space.VerticalSpacer100
+import design.space.VerticalSpacer200
+import design.space.spacing
 import dewildte.composeapp.generated.resources.Res
 import dewildte.composeapp.generated.resources.profile_image
 import org.jetbrains.compose.resources.painterResource
@@ -39,6 +46,45 @@ fun ProfileScreen() {
 				)
 			}
 
+
+        VerticalSpacer100()
+
+        Headline(text = "Roles:")
+
+        VerticalSpacer100()
+
+        val roles = listOf(
+            "Human",
+            "Husband",
+            "Cat Owner",
+            "Software Developer",
+            "Woods Walker",
+        )
+
+        TagRow(tags = roles)
+
+        VerticalSpacer200()
+
+        Headline(text = "Skills:")
+
+        VerticalSpacer100()
+
+        val skills = listOf(
+            "Kotlin",
+            "Java",
+            "Android",
+            "Jetpack Compose",
+            "Compose Multiplatform",
+            "JUnit 4",
+            "Espresso",
+            "Git",
+            "GitHub",
+            "Jira",
+        )
+
+        TagRow(tags = skills)
+
+
 		}
 
 		paragraph {
@@ -58,4 +104,36 @@ fun ProfileScreen() {
 		}
 	}
 
+}
+
+@Composable
+private fun Headline(
+	text: String
+) {
+	Text(
+		text = text,
+		style = MaterialTheme.typography.headlineLarge,
+	)
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun TagRow(
+	tags: List<String>
+) {
+	FlowRow(
+		horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spacing100.dp)
+	) {
+
+		tags.forEach { tag ->
+			Card(
+				modifier = Modifier.padding(bottom = MaterialTheme.spacing.spacing100.dp),
+			) {
+				Text(
+					text = tag, style = MaterialTheme.typography.labelMedium,
+					modifier = Modifier.padding(MaterialTheme.spacing.spacing100.dp)
+				)
+			}
+		}
+	}
 }

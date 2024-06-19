@@ -39,43 +39,6 @@ fun HomeScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        VerticalSpacer100()
-
-        Headline(text = "Roles:")
-
-        VerticalSpacer100()
-
-        val roles = listOf(
-            "Human",
-            "Husband",
-            "Cat Owner",
-            "Software Developer",
-            "Woods Walker",
-        )
-
-        TagRow(tags = roles)
-
-        VerticalSpacer200()
-
-        Headline(text = "Skills:")
-
-        VerticalSpacer100()
-
-        val skills = listOf(
-            "Kotlin",
-            "Java",
-            "Android",
-            "Jetpack Compose",
-            "Compose Multiplatform",
-            "JUnit 4",
-            "Espresso",
-            "Git",
-            "GitHub",
-            "Jira",
-        )
-
-        TagRow(tags = skills)
-
         greeting.composeFold({}) {
             VerticalSpacer200()
             Markdown(it)
