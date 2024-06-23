@@ -20,6 +20,7 @@ class PlainTextMarkdownTextParser : MarkdownTextParser<MarkdownToken> {
 				'_',
 				'*',
 				'`',
+				'-',
 			)
 
 		val validChar = PredicateTextParser { char ->

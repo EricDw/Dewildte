@@ -1,48 +1,64 @@
 package parsing.markdown.lexer
 
-import parsing.Parser
+import parsing.*
 import parsing.markdown.MarkdownParserError
 import parsing.markdown.MarkdownParserState
-import parsing.oneOrMore
-import parsing.or
 
 class MarkdownLexer {
 
-	@Throws(MarkdownParserError::class)
-	fun analyzeMarkdown(
-		markdown: String
-	): List<MarkdownToken> {
+    @Throws(MarkdownParserError::class)
+    fun analyzeMarkdown(
+        markdown: String
+    ): List<MarkdownToken> {
 
-		val plainText =
-			PlainTextMarkdownTextParser()
+        if (markdown.isEmpty()) {
+            return emptyList()
+        }
 
-		val emphasis =
-			EmphasisMarkdownTextParser()
+        val plainText =
+            PlainTextMarkdownTextParser()
 
-		val strong =
-			StrongMarkdownTextParser()
+        val emphasis =
+            EmphasisMarkdownTextParser()
 
-		val parser =
-			oneOrMore(strong or emphasis or plainText)
+        val strong =
+            StrongMarkdownTextParser()
 
-		val input =
-			MarkdownParserState(
-				markdown = markdown,
-			)
+        val codeSpan =
+            CodeSpanMarkdownTextParser()
 
-		val result =
-			parser(input)
+        val basicBullet =
+            BasicBulletPointMarkdownTextParser()
 
-		return when (result) {
-			is Parser.Result.Failure -> {
-				throw result.error
-			}
+        val choices = choiceOf(
+            strong,
+            emphasis,
+            codeSpan,
+            basicBullet,
+            plainText
+        )
 
-			is Parser.Result.Match -> {
-				result.matchedItem.toList()
-			}
-		}
+        val parser =
+            oneOrMore(choices)
 
-	}
+        val input =
+            MarkdownParserState(
+                markdown = markdown,
+            )
+
+        val result =
+            parser(input)
+
+        return when (result) {
+            is Parser.Result.Failure -> {
+                throw result.error
+            }
+
+            is Parser.Result.Match -> {
+                result.matchedItem.toList()
+            }
+        }
+
+    }
 
 }

@@ -18,6 +18,7 @@ kotlin = "2.0.0"
 ktor = "2.3.9"
 logback = "1.5.3"
 compose-navigation = "2.7.0-alpha07"
+markdown = "0.7.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -42,6 +43,7 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+markdown = { group = "org.jetbrains", name = "markdown", version.ref = "markdown" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -80,6 +80,7 @@ kotlin {
 			implementation(compose.components.uiToolingPreview)
 			implementation(projects.shared)
 			implementation(libs.compose.navigation)
+			implementation(libs.markdown)
 		}
 
 		wasmJsMain.dependencies {

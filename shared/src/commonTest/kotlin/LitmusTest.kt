@@ -7,6 +7,9 @@ class LitmusTest {
     fun shouldDisplayPrettyString() {
         val platform = getPlatform().name
 
+        // Act
+        println(platform)
+
         //Assert
         assertTrue(platform.isNotBlank())
     }

@@ -1,83 +1,127 @@
 package presentation.editor
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text2.BasicTextField2
-import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text2.input.forEachTextValue
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import design.space.spacing
 import design.text.Markdown
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MarkdownEditorScreen(
     modifier: Modifier = Modifier,
     state: MarkdownEditorScreenState = MarkdownEditorScreenState(),
+    onToggleSampleClick: () -> Unit = {},
     onMarkdownChange: (newMarkdown: String) -> Unit = {},
 ) {
-    val (markdown) = state
+    val (markdown, showSampleMarkdown, sampleMarkdown) = state
 
-    val currentMarkdownState by remember {
-        val value = TextFieldState(
-            initialText = markdown,
-        )
+    var currentMarkdownValue by remember {
         mutableStateOf(
-            value = value
+            value = markdown
         )
     }
 
     val containerModifier = Modifier
         .fillMaxSize()
-        .padding(MaterialTheme.spacing.spacing200.dp)
 
     val textFieldModifier = Modifier
         .fillMaxSize()
         .padding(MaterialTheme.spacing.spacing200.dp)
 
-    Row(
-        modifier = containerModifier,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spacing100.dp)
+    Column(
+        modifier = containerModifier
     ) {
 
-        val cardModifier = Modifier
-            .fillMaxSize()
-            .weight(0.5F)
+        TopAppBar(
+            modifier = Modifier.fillMaxWidth(),
+            title = {
+                Text(text = "Markdown Editor")
+            },
+            actions = {
+                val label = if (showSampleMarkdown) {
+                    "Hide Sample"
+                } else {
+                    "Show Sample"
+                }
+                Text(
+                    text = label,
+                    modifier = Modifier.clickable {
+                        onToggleSampleClick()
+                    }
+                )
+            },
+        )
 
-        Card(
-            modifier = cardModifier,
+        Row(
+            modifier = Modifier.padding(MaterialTheme.spacing.spacing200.dp),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spacing100.dp)
         ) {
-            BasicTextField2(
-                modifier = textFieldModifier,
-                state = currentMarkdownState,
+
+            val cardModifier = Modifier
+                .fillMaxSize()
+                .weight(0.5F)
+
+            Card(
+                modifier = cardModifier,
+            ) {
+                val value = if (showSampleMarkdown) {
+                    sampleMarkdown
+                } else {
+                    currentMarkdownValue
+                }
+                BasicTextField(
+                    modifier = textFieldModifier,
+                    value = value,
+                    onValueChange = { newValue ->
+                        currentMarkdownValue = newValue
+                    },
+                    readOnly = showSampleMarkdown
+                )
+            }
+
+            val previewMarkdown = if (showSampleMarkdown) {
+                sampleMarkdown
+            } else {
+                markdown
+            }
+
+            PreviewPanel(
+                markdown = previewMarkdown,
+                modifier = cardModifier
             )
         }
-
-        Card(
-            modifier = cardModifier,
-        ) {
-            currentMarkdownState.text.toString()
-                .takeIf { it.isNotBlank() }
-                ?.let {
-                    Markdown(
-                        value = it,
-                        modifier = textFieldModifier
-                    )
-                }
-        }
     }
 
-    LaunchedEffect(currentMarkdownState) {
-        currentMarkdownState.forEachTextValue { newValue ->
-            onMarkdownChange(newValue.toString())
-        }
+    LaunchedEffect(currentMarkdownValue) {
+        onMarkdownChange(currentMarkdownValue)
     }
+}
+
+@Composable
+fun PreviewPanel(
+    markdown: String = "",
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+    ) {
+
+        val markdownModifier = Modifier
+            .fillMaxSize()
+            .padding(MaterialTheme.spacing.spacing200.dp)
+
+        Markdown(
+            value = markdown,
+            modifier = markdownModifier
+        )
+
+    }
+
 }

@@ -1,21 +1,47 @@
 package presentation.editor
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import dewildte.composeapp.generated.resources.Res
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MarkdownEditorScreenController() {
-    val state by remember {
+
+    var state by remember {
         mutableStateOf(
             value = MarkdownEditorScreenState(
-                markdown = "**Write** here, _preview_ there ->"
+                markdown = "**Write** here, _preview_ there ->",
             )
         )
     }
 
     MarkdownEditorScreen(
-        state = state
+        state = state,
+        onToggleSampleClick = {
+            state = state.copy(
+                showSampleMarkdown = !state.showSampleMarkdown,
+            )
+        },
+        onMarkdownChange = { newMarkdown ->
+            state = state.copy(
+                markdown = newMarkdown,
+            )
+        },
     )
+
+    LaunchedEffect(Unit) {
+        try {
+            val sample = Res
+                .readBytes("files/sample.md")
+                .decodeToString()
+
+            state = state.copy(
+                sampleMarkdown = sample
+            )
+
+        } catch (exception: Throwable) {
+            println(exception)
+        }
+    }
 }
