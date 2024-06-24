@@ -18,9 +18,14 @@ fun MarkdownEditorScreenController() {
 
     MarkdownEditorScreen(
         state = state,
-        onToggleSampleClick = {
+        onShowSampleClick = {
             state = state.copy(
-                showSampleMarkdown = !state.showSampleMarkdown,
+                showSampleMarkdown = true,
+            )
+        },
+        onHideSampleClick = {
+            state = state.copy(
+                showSampleMarkdown = false,
             )
         },
         onMarkdownChange = { newMarkdown ->

@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawStyle
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -153,85 +155,6 @@ private fun IntelliJMarkdown(
                 node.children.forEach { buildNode(it) }
             }
 
-            MarkdownElementTypes.PARAGRAPH -> {
-                node.children.forEach { buildNode(it) }
-            }
-
-            MarkdownElementTypes.EMPH -> {
-                val textSpan = node.getTextInNode(text)
-
-                val computedString = textSpan
-                    .drop(1)
-                    .dropLast(1)
-                    .let {
-                        AnnotatedString(
-                            text = it.toString(),
-                            spanStyle = SpanStyle(fontWeight = FontWeight.Bold)
-                        )
-                    }
-                append(computedString)
-            }
-
-            MarkdownElementTypes.STRONG -> {
-                val textSpan = node.getTextInNode(text)
-
-                val computedString = textSpan
-                    .drop(2)
-                    .dropLast(2)
-                    .let {
-                        AnnotatedString(
-                            text = it.toString(),
-                            spanStyle = SpanStyle(fontStyle = FontStyle.Italic)
-                        )
-                    }
-                append(computedString)
-            }
-
-            MarkdownElementTypes.CODE_SPAN -> {
-                val textSpan = node.getTextInNode(text)
-
-                val style = SpanStyle(
-                    background = Color.LightGray,
-                    fontFamily = codeFontFamily,
-                    color = Color.Black,
-                )
-
-                val computedString = textSpan
-                    .drop(1)
-                    .dropLast(1)
-
-                withStyle(style) {
-                    append(computedString)
-                }
-
-            }
-
-            MarkdownElementTypes.CODE_FENCE -> {
-                val textSpan = node.getTextInNode(text).toString()
-
-                val paragraphStyle = ParagraphStyle(
-                    textIndent = TextIndent(firstLine = 8.sp, restLine = 8.sp)
-                )
-
-                val style = SpanStyle(
-                    background = Color.LightGray,
-                    fontFamily = codeFontFamily,
-                    color = Color.Black,
-                )
-
-                val computedString = textSpan
-                    .drop(3)
-                    .dropLast(3)
-                    .trim()
-
-                withStyle(paragraphStyle) {
-                    withStyle(style) {
-                        append(computedString)
-                    }
-                }
-
-            }
-
             MarkdownElementTypes.ATX_1 -> {
                 val textSpan = node.getTextInNode(text)
 
@@ -304,6 +227,111 @@ private fun IntelliJMarkdown(
 
             }
 
+            MarkdownElementTypes.PARAGRAPH -> {
+                node.children.forEach { buildNode(it) }
+            }
+
+            MarkdownElementTypes.EMPH -> {
+                val textSpan = node.getTextInNode(text)
+
+                val computedString = textSpan
+                    .drop(1)
+                    .dropLast(1)
+                    .let {
+                        AnnotatedString(
+                            text = it.toString(),
+                            spanStyle = SpanStyle(fontWeight = FontWeight.Bold)
+                        )
+                    }
+                append(computedString)
+            }
+
+            MarkdownElementTypes.STRONG -> {
+                val textSpan = node.getTextInNode(text)
+
+                val computedString = textSpan
+                    .drop(2)
+                    .dropLast(2)
+                    .let {
+                        AnnotatedString(
+                            text = it.toString(),
+                            spanStyle = SpanStyle(fontStyle = FontStyle.Italic)
+                        )
+                    }
+                append(computedString)
+            }
+
+            MarkdownElementTypes.CODE_SPAN -> {
+                val textSpan = node.getTextInNode(text)
+
+                val style = SpanStyle(
+                    background = Color.LightGray,
+                    fontFamily = codeFontFamily,
+                    color = Color.Black,
+                )
+
+                val computedString = textSpan
+                    .drop(1)
+                    .dropLast(1)
+
+                withStyle(style) {
+                    append(computedString)
+                }
+
+            }
+
+            MarkdownElementTypes.CODE_FENCE -> {
+                val textSpan = node
+                    .getTextInNode(text)
+                    .lines()
+                    .drop(1)
+                    .dropLast(1)
+                    .joinToString(separator = "\n")
+
+                val paragraphStyle = ParagraphStyle(
+                    textIndent = TextIndent(firstLine = 8.sp, restLine = 8.sp),
+                )
+
+                val style = SpanStyle(
+                    background = Color.LightGray,
+                    fontFamily = codeFontFamily,
+                    color = Color.Black,
+                )
+
+                withStyle(paragraphStyle) {
+                    withStyle(style) {
+                        append(textSpan)
+                    }
+                }
+
+            }
+
+            MarkdownElementTypes.CODE_BLOCK -> {
+                val textSpan = node
+                    .getTextInNode(text)
+                    .lines()
+                    .drop(1)
+                    .dropLast(1)
+                    .joinToString(separator = "\n")
+
+                val paragraphStyle = ParagraphStyle(
+                    textIndent = TextIndent(firstLine = 8.sp, restLine = 8.sp),
+                )
+
+                val style = SpanStyle(
+                    background = Color.LightGray,
+                    fontFamily = codeFontFamily,
+                    color = Color.Black,
+                )
+
+                withStyle(paragraphStyle) {
+                    withStyle(style) {
+                        append(textSpan)
+                    }
+                }
+
+            }
+
             MarkdownTokenTypes.TEXT -> {
                 append(node.getTextInNode(text))
             }
@@ -325,16 +353,12 @@ private fun IntelliJMarkdown(
             buildNode(parsedTree)
         }
 
-    SelectionContainer {
-        LazyColumn(
-            modifier = modifier,
-        ) {
-            item {
-                Text(
-                    text = annotatedString,
-                )
-            }
-        }
+    SelectionContainer(
+        modifier = modifier,
+    ) {
+        Text(
+            text = annotatedString,
+        )
     }
 
 }

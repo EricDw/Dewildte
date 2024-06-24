@@ -1,8 +1,11 @@
 package presentation.editor
 
+import EditIcon
+import EditOffIcon
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text2.input.forEachTextValue
 import androidx.compose.material3.*
@@ -17,7 +20,8 @@ import design.text.Markdown
 fun MarkdownEditorScreen(
     modifier: Modifier = Modifier,
     state: MarkdownEditorScreenState = MarkdownEditorScreenState(),
-    onToggleSampleClick: () -> Unit = {},
+    onShowSampleClick: () -> Unit = {},
+    onHideSampleClick: () -> Unit = {},
     onMarkdownChange: (newMarkdown: String) -> Unit = {},
 ) {
     val (markdown, showSampleMarkdown, sampleMarkdown) = state
@@ -45,17 +49,23 @@ fun MarkdownEditorScreen(
                 Text(text = "Markdown Editor")
             },
             actions = {
-                val label = if (showSampleMarkdown) {
-                    "Hide Sample"
-                } else {
-                    "Show Sample"
-                }
-                Text(
-                    text = label,
-                    modifier = Modifier.clickable {
-                        onToggleSampleClick()
+
+                IconToggleButton(
+                    checked = showSampleMarkdown,
+                    onCheckedChange = { checked ->
+                        if (checked) {
+                            onShowSampleClick()
+                        } else {
+                            onHideSampleClick()
+                        }
+                    },
+                ) {
+                    if (showSampleMarkdown) {
+                        EditIcon()
+                    } else {
+                        EditOffIcon()
                     }
-                )
+                }
             },
         )
 
@@ -117,10 +127,14 @@ fun PreviewPanel(
             .fillMaxSize()
             .padding(MaterialTheme.spacing.spacing200.dp)
 
-        Markdown(
-            value = markdown,
-            modifier = markdownModifier
-        )
+        LazyColumn {
+            item {
+                Markdown(
+                    value = markdown,
+                    modifier = markdownModifier
+                )
+            }
+        }
 
     }
 
