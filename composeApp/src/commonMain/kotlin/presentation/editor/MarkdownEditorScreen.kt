@@ -127,7 +127,7 @@ fun PreviewPanel(
             .fillMaxSize()
             .padding(MaterialTheme.spacing.spacing200.dp)
 
-        LazyColumn {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 Markdown(
                     value = markdown,

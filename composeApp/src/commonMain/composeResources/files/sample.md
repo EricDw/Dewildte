@@ -14,9 +14,13 @@
 
 Paragraph
 
-_Strong Span_
+_Emphasis Span_
 
-__Emphasis Span__
+__Strong Span__
+
+___Strong & Emphasis Span___
+
+___`Strong & Emphasis code Span`___
 
 `<- code span ->`
 
