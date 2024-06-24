@@ -1,39 +1,24 @@
 package design.text
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.text.*
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextIndent
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import org.intellij.markdown.IElementType
-import org.intellij.markdown.MarkdownElementType
+import design.type.jetBrainsMono
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
-import org.intellij.markdown.ast.accept
 import org.intellij.markdown.ast.getTextInNode
-import org.intellij.markdown.ast.visitors.Visitor
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import parsing.markdown.lexer.MarkdownLexer
-import parsing.markdown.lexer.MarkdownToken
 
 @Composable
 fun Markdown(
@@ -160,6 +145,8 @@ private fun IntelliJMarkdown(
         fontWeight = FontWeight.SemiBold,
     )
 
+    val codeFontFamily = jetBrainsMono
+
     fun AnnotatedString.Builder.buildNode(node: ASTNode) {
         when (node.type) {
             MarkdownElementTypes.MARKDOWN_FILE -> {
@@ -205,7 +192,7 @@ private fun IntelliJMarkdown(
 
                 val style = SpanStyle(
                     background = Color.LightGray,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = codeFontFamily,
                     color = Color.Black,
                 )
 
@@ -228,7 +215,7 @@ private fun IntelliJMarkdown(
 
                 val style = SpanStyle(
                     background = Color.LightGray,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = codeFontFamily,
                     color = Color.Black,
                 )
 
@@ -248,12 +235,10 @@ private fun IntelliJMarkdown(
             MarkdownElementTypes.ATX_1 -> {
                 val textSpan = node.getTextInNode(text)
 
-                val style = header1SpanStyle
-
                 val computedString = textSpan
                     .drop(2)
 
-                withStyle(style) {
+                withStyle(header1SpanStyle) {
                     append(computedString)
                 }
 
@@ -262,12 +247,10 @@ private fun IntelliJMarkdown(
             MarkdownElementTypes.ATX_2 -> {
                 val textSpan = node.getTextInNode(text)
 
-                val style = header2SpanStyle
-
                 val computedString = textSpan
                     .drop(3)
 
-                withStyle(style) {
+                withStyle(header2SpanStyle) {
                     append(computedString)
                 }
 
@@ -276,12 +259,10 @@ private fun IntelliJMarkdown(
             MarkdownElementTypes.ATX_3 -> {
                 val textSpan = node.getTextInNode(text)
 
-                val style = header3SpanStyle
-
                 val computedString = textSpan
                     .drop(4)
 
-                withStyle(style) {
+                withStyle(header3SpanStyle) {
                     append(computedString)
                 }
 
@@ -290,12 +271,10 @@ private fun IntelliJMarkdown(
             MarkdownElementTypes.ATX_4 -> {
                 val textSpan = node.getTextInNode(text)
 
-                val style = header4SpanStyle
-
                 val computedString = textSpan
                     .drop(5)
 
-                withStyle(style) {
+                withStyle(header4SpanStyle) {
                     append(computedString)
                 }
 
@@ -304,12 +283,10 @@ private fun IntelliJMarkdown(
             MarkdownElementTypes.ATX_5 -> {
                 val textSpan = node.getTextInNode(text)
 
-                val style = header5SpanStyle
-
                 val computedString = textSpan
                     .drop(6)
 
-                withStyle(style) {
+                withStyle(header5SpanStyle) {
                     append(computedString)
                 }
 
@@ -318,12 +295,10 @@ private fun IntelliJMarkdown(
             MarkdownElementTypes.ATX_6 -> {
                 val textSpan = node.getTextInNode(text)
 
-                val style = header6SpanStyle
-
                 val computedString = textSpan
                     .drop(7)
 
-                withStyle(style) {
+                withStyle(header6SpanStyle) {
                     append(computedString)
                 }
 
