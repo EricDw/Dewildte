@@ -47,11 +47,7 @@ fun MarkdownEditorScreen(
         .fillMaxSize()
         .padding(MaterialTheme.spacing.spacing200.dp)
 
-    val panelWeight = if (showTwoPanel) {
-        0.5F
-    } else {
-        1F
-    }
+    val panelWeight = 0.5F
 
     Column(
         modifier = containerModifier
@@ -64,22 +60,20 @@ fun MarkdownEditorScreen(
             },
             actions = {
 
-                if (showTwoPanel) {
-                    IconToggleButton(
-                        checked = showSampleMarkdown,
-                        onCheckedChange = { checked ->
-                            if (checked) {
-                                onShowSampleClick()
-                            } else {
-                                onHideSampleClick()
-                            }
-                        },
-                    ) {
-                        if (showSampleMarkdown) {
-                            EditIcon()
+                IconToggleButton(
+                    checked = showSampleMarkdown,
+                    onCheckedChange = { checked ->
+                        if (checked) {
+                            onShowSampleClick()
                         } else {
-                            EditOffIcon()
+                            onHideSampleClick()
                         }
+                    },
+                ) {
+                    if (showSampleMarkdown) {
+                        EditIcon()
+                    } else {
+                        EditOffIcon()
                     }
                 }
 
@@ -94,9 +88,9 @@ fun MarkdownEditorScreen(
                     },
                 ) {
                     if (showPreviewPanel) {
-                        PreviewOffIcon()
-                    } else {
                         PreviewIcon()
+                    } else {
+                        PreviewOffIcon()
                     }
                 }
             },
