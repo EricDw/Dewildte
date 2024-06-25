@@ -2,15 +2,17 @@ package presentation.editor
 
 import EditIcon
 import EditOffIcon
+import PreviewIcon
+import PreviewOffIcon
+import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text2.input.forEachTextValue
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.dp
 import design.space.spacing
 import design.text.Markdown
@@ -22,9 +24,15 @@ fun MarkdownEditorScreen(
     state: MarkdownEditorScreenState = MarkdownEditorScreenState(),
     onShowSampleClick: () -> Unit = {},
     onHideSampleClick: () -> Unit = {},
+    onShowPreviewPanelClick: () -> Unit = {},
+    onHidePreviewPanelClick: () -> Unit = {},
     onMarkdownChange: (newMarkdown: String) -> Unit = {},
 ) {
-    val (markdown, showSampleMarkdown, sampleMarkdown) = state
+    val (markdown,
+        sampleMarkdown,
+        showSampleMarkdown,
+        showTwoPanel,
+        showPreviewPanel) = state
 
     var currentMarkdownValue by remember {
         mutableStateOf(
@@ -39,6 +47,12 @@ fun MarkdownEditorScreen(
         .fillMaxSize()
         .padding(MaterialTheme.spacing.spacing200.dp)
 
+    val panelWeight = if (showTwoPanel) {
+        0.5F
+    } else {
+        1F
+    }
+
     Column(
         modifier = containerModifier
     ) {
@@ -50,20 +64,39 @@ fun MarkdownEditorScreen(
             },
             actions = {
 
+                if (showTwoPanel) {
+                    IconToggleButton(
+                        checked = showSampleMarkdown,
+                        onCheckedChange = { checked ->
+                            if (checked) {
+                                onShowSampleClick()
+                            } else {
+                                onHideSampleClick()
+                            }
+                        },
+                    ) {
+                        if (showSampleMarkdown) {
+                            EditIcon()
+                        } else {
+                            EditOffIcon()
+                        }
+                    }
+                }
+
                 IconToggleButton(
-                    checked = showSampleMarkdown,
+                    checked = showPreviewPanel,
                     onCheckedChange = { checked ->
                         if (checked) {
-                            onShowSampleClick()
+                            onShowPreviewPanelClick()
                         } else {
-                            onHideSampleClick()
+                            onHidePreviewPanelClick()
                         }
                     },
                 ) {
-                    if (showSampleMarkdown) {
-                        EditIcon()
+                    if (showPreviewPanel) {
+                        PreviewOffIcon()
                     } else {
-                        EditOffIcon()
+                        PreviewIcon()
                     }
                 }
             },
@@ -71,29 +104,44 @@ fun MarkdownEditorScreen(
 
         Row(
             modifier = Modifier.padding(MaterialTheme.spacing.spacing200.dp),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spacing100.dp)
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.spacing100.dp),
         ) {
 
             val cardModifier = Modifier
                 .fillMaxSize()
-                .weight(0.5F)
+                .weight(panelWeight)
 
-            Card(
+            AnimatedVisibility(
                 modifier = cardModifier,
-            ) {
-                val value = if (showSampleMarkdown) {
-                    sampleMarkdown
-                } else {
-                    currentMarkdownValue
-                }
-                BasicTextField(
-                    modifier = textFieldModifier,
-                    value = value,
-                    onValueChange = { newValue ->
-                        currentMarkdownValue = newValue
-                    },
-                    readOnly = showSampleMarkdown
+                visible = showTwoPanel || !showPreviewPanel,
+                enter = slideInHorizontally(
+                    initialOffsetX = { fullWidth: Int ->
+                        -fullWidth
+                    }
+                ),
+                exit = slideOutHorizontally(
+                    targetOffsetX = { fullWidth: Int ->
+                        -fullWidth
+                    }
                 )
+            ) {
+                Card(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    val value = if (showSampleMarkdown) {
+                        sampleMarkdown
+                    } else {
+                        currentMarkdownValue
+                    }
+                    BasicTextField(
+                        modifier = textFieldModifier,
+                        value = value,
+                        onValueChange = { newValue ->
+                            currentMarkdownValue = newValue
+                        },
+                        readOnly = showSampleMarkdown
+                    )
+                }
             }
 
             val previewMarkdown = if (showSampleMarkdown) {
@@ -102,10 +150,17 @@ fun MarkdownEditorScreen(
                 markdown
             }
 
-            PreviewPanel(
-                markdown = previewMarkdown,
-                modifier = cardModifier
-            )
+            AnimatedVisibility(
+                modifier = cardModifier,
+                visible = showPreviewPanel,
+                enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
+                exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
+            ) {
+                PreviewPanel(
+                    markdown = previewMarkdown,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 

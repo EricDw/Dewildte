@@ -1,5 +1,6 @@
 package presentation.editor
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -13,6 +14,7 @@ private const val START_DESTINATION = MARKDOWN_EDITOR_ROUTE
 object MarkdownEditorRoute : Route
 
 fun NavGraphBuilder.markdownEditorNavigationGraph(
+    windowSizeClass: WindowSizeClass,
     onLaunch: () -> Unit = {},
 ) {
     navigation(
@@ -22,7 +24,9 @@ fun NavGraphBuilder.markdownEditorNavigationGraph(
         composable(
             route = MARKDOWN_EDITOR_ROUTE
         ) {
-            MarkdownEditorScreenController()
+            MarkdownEditorScreenController(
+                windowSizeClass = windowSizeClass,
+            )
 
             LaunchedEffect(onLaunch) {
                 onLaunch()

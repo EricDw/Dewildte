@@ -614,6 +614,7 @@ private fun IntelliJMarkdownColumn(
             }
 
             MarkdownElementTypes.PARAGRAPH -> {
+                println(mutableListOf<String>().addNodeTypes(node))
 
                 val annotatedText = buildAnnotatedString {
                     buildNode(node)

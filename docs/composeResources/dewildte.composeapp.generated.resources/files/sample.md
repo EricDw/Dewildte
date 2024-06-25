@@ -36,3 +36,10 @@ fun main(markdown: String): MarkdownTree {
     return TODO()
 }
 ```
+
+Data Table
+
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |

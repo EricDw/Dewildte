@@ -81,6 +81,8 @@ kotlin {
 			implementation(projects.shared)
 			implementation(libs.compose.navigation)
 			implementation(libs.markdown)
+			implementation("dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0")
+
 		}
 
 		wasmJsMain.dependencies {

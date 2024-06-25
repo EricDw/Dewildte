@@ -24,6 +24,7 @@ class PlainTextMarkdownTextParser : MarkdownTextParser<MarkdownToken> {
 			)
 
 		val validChar = PredicateTextParser { char ->
+			!char.isWhitespace() &&
 			!invalidCharacters.contains(char)
 		}
 
